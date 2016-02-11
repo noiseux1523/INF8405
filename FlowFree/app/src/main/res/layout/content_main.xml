@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorBackground"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.cedric.flowfree.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="75dp"
+        android:text="Grid Size"
+        android:id="@+id/textGridSize"
+        android:textColor="#ffffff"
+        android:textSize="60dp"
+        android:textIsSelectable="false"
+        android:textStyle="bold"
+        android:layout_marginBottom="40dp"
+        android:layout_above="@+id/buttonLevel1"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="225dp"
+        android:layout_height="75dp"
+        android:background="@drawable/button_boarder"
+        android:text="7x7"
+        android:id="@+id/buttonLevel1"
+        android:textSize="50dp"
+        android:textColor="#ffffff"
+        android:allowUndo="false"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="225dp"
+        android:layout_height="75dp"
+        android:background="@drawable/button_boarder"
+        android:text="8x8"
+        android:id="@+id/button8x8"
+        android:textSize="50dp"
+        android:textColor="#ffffff"
+        android:allowUndo="false"
+        android:layout_marginTop="42dp"
+        android:layout_below="@+id/buttonLevel1"
+        android:layout_alignStart="@+id/buttonLevel1" />
+
+    <Button
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_exit"
+        android:text="EXIT"
+        android:id="@+id/buttonExit"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textColor="#ff0000"
+        android:textSize="35dp" />
+
+</RelativeLayout>

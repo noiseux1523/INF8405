@@ -1,5 +1,7 @@
 package com.example.cedric.flowfree;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -30,7 +32,7 @@ public class Level1_7x7 extends MainActivity {
     double[] position = {x_ini, y_ini, x_int, y_int, x_fin, y_fin};
 
     Game g = null;
-
+    int level = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +74,7 @@ public class Level1_7x7 extends MainActivity {
 
             }
         });
-        g = new Game(1);
+        g = new Game(2);
         g.draw(mainImageView, getApplicationContext());
     }
 
@@ -132,6 +134,33 @@ public class Level1_7x7 extends MainActivity {
                 textView1.setText(touchStatus);
             }
         g.draw(mainImageView, getApplicationContext());
+        if (g.finished()) {
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setTitle("FlowFree");
+            dlgAlert.setCancelable(true);
+            dlgAlert.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+            if (g.isWon()) {
+                if (level == 6) {
+                    dlgAlert.setMessage("You won! You finished all levels");
+                }
+                else {
+                    dlgAlert.setMessage("You won! Try this next level :)");
+                }
+
+
+            }
+            else {
+                dlgAlert.setMessage("You lost... :(");
+            }
+
+            dlgAlert.create().show();
+            g.restart();
+        }
         position[0] = x_ini;
         position[1] = y_ini;
         position[2] = x_int;

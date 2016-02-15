@@ -27,16 +27,35 @@ public class Game {
     private Vector<Point> currentPath;
     private Vector<Vector<Point>> drawnPaths;
     private int size;
+    private static Point l1[] = {
+            new Point(0, 0), new Point(0, 6),//red
+            new Point(1, 0), new Point(1, 6),//blue
+            new Point(2, 0), new Point(2, 6),//yellow
+            new Point(3, 0), new Point(3, 6),//green
+            new Point(4, 0), new Point(4, 6),//magenta
+            new Point(5, 0), new Point(5, 6) //cyan
+    };
+    private static Point l2[] = {
+            new Point(0, 6), new Point(1, 1),
+            new Point(4, 2), new Point(6, 3),
+            new Point(1, 4), new Point(4, 3),
+            new Point(0, 3), new Point(4, 4),
+            new Point(4, 6), new Point(6, 4),
+    };
+    private static Point l3[] = {
+            new Point(2, 0), new Point(0, 6),
+            new Point(1, 0), new Point(1, 6),
+            new Point(2, 0), new Point(2, 6),
+            new Point(3, 0), new Point(3, 6),
+            new Point(4, 0), new Point(4, 6),
+    };
+
+    private static Point levels[][] = {l1,l2,l3};
+
 
     public Game(int level) {
-        Point bases[] = {
-                new Point(0, 0), new Point(0, 6),
-                new Point(1, 0), new Point(1, 6),
-                new Point(2, 0), new Point(2, 6),
-                new Point(3, 0), new Point(3, 6),
-                new Point(4, 0), new Point(4, 6),
-        };
-        basePoints = new Vector<Point>(Arrays.asList(bases));
+
+        basePoints = new Vector<Point>(Arrays.asList(levels[level-1]));
         currentPath = new Vector<Point>();
         drawnPaths = new Vector<Vector<Point>>();
         size = level > 3 ? 8 : 7;
@@ -109,7 +128,11 @@ public class Game {
         currentPath.add(p);
     }
 
-    public boolean gameWon() {
+    public boolean finished() {
+        return basePoints.size()/2 == drawnPaths.size();
+    }
+
+    public boolean isWon() {
         int count = 0;
         for (Vector<Point> path:
              drawnPaths) {

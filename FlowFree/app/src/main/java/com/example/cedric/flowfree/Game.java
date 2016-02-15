@@ -21,7 +21,7 @@ public class Game {
         basePoints = new Vector<Point>(Arrays.asList(bases));
         currentPath = new Vector<Point>();
         drawnPaths = new Vector<Vector<Point>>();
-        size = level < 3 ? 8 : 7;
+        size = level > 3 ? 8 : 7;
     }
 
     public void down(int x, int y) {
@@ -30,10 +30,13 @@ public class Game {
 
         Vector<Point> pathToDelete = null;
 
+        //if a drawn path is clicked, the path is deleted
         for (Vector<Point> path:
              drawnPaths) {
-            if (path.contains(p)) pathToDelete = path;
-            break;
+            if (path.contains(p)){
+                pathToDelete = path;
+                break;
+            }
         }
         if (pathToDelete != null) {
             drawnPaths.remove(pathToDelete);
@@ -77,6 +80,14 @@ public class Game {
             currentPath.clear();
             return;
         }
+
+        //if not adjacent to previous
+        int distance = Math.abs(p.x - currentPath.lastElement().x) + Math.abs(p.y - currentPath.lastElement().y);
+        if (distance != 1){
+            currentPath.clear();
+            return;
+        }
+
         currentPath.add(p);
     }
 

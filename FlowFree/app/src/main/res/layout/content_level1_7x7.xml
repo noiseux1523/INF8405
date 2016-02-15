@@ -94,16 +94,6 @@
         android:textSize="21dp"
         android:textAlignment="center" />
 
-    <GridLayout
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_alignTop="@+id/grid77"
-        android:layout_alignEnd="@+id/grid77"
-        android:id="@+id/gridLayout"
-        android:layout_alignBottom="@+id/grid77"
-        android:layout_alignLeft="@+id/grid77"
-        android:layout_alignRight="@+id/grid77"></GridLayout>
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"

@@ -1,6 +1,7 @@
 package com.example.cedric.flowfree;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -16,7 +17,8 @@ import static java.lang.Math.floor;
 public class Level1_7x7 extends MainActivity {
 
     GridLayout myLayout = null;
-
+    ImageView mainCanvas = null;
+    Canvas
     double x_ini;
     double y_ini;
     double x_int;
@@ -34,14 +36,23 @@ public class Level1_7x7 extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level1_7x7);
 
-        myLayout = (GridLayout) findViewById(R.id.gridLayout);
-        myLayout.setOnTouchListener(new View.OnTouchListener() {
+        mainCanvas = (ImageView) findViewById((R.id.grid77));
+        mainCanvas.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 handleTouch(event, position);
                 return true;
             }
         });
+
+//        myLayout = (GridLayout) findViewById(R.id.gridLayout);
+//        myLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                handleTouch(event, position);
+//                return true;
+//            }
+//        });
 
         Button buttonExit = (Button) findViewById(R.id.buttonExit);
         buttonExit.setOnClickListener(new View.OnClickListener() {
@@ -88,15 +99,16 @@ public class Level1_7x7 extends MainActivity {
 
 
 
-            double x = (int) m.getX(0);
-            double y = (int) m.getY(0);
-            int action = m.getActionMasked();
-            int id = m.getPointerId(0);
-            int actionIndex = m.getActionIndex();
-            String actionString;
-            int boxWidth = myLayout.getWidth()/7;///myLayout.getRowCount();
-            int idX = (int)floor(m.getX(0)/boxWidth);
-            int idY = (int)floor(m.getY(0)/boxWidth);
+        double x = (int) m.getX(0);
+        double y = (int) m.getY(0);
+        int action = m.getActionMasked();
+        int id = m.getPointerId(0);
+        int actionIndex = m.getActionIndex();
+        String actionString;
+        int boxWidth = mainCanvas.getWidth()/7;///myLayout.getRowCount();
+        int idX = (int)floor(m.getX(0)/boxWidth);
+        int idY = (int)floor(m.getY(0)/boxWidth);
+        if (idX < 0 || idY < 0 || idX > 6 || idY > 7) return;
 
         switch (action) {
                 case MotionEvent.ACTION_DOWN:

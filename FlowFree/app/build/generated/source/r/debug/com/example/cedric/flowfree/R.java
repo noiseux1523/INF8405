@@ -2385,7 +2385,7 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f040016;
         public static final int abc_search_view=0x7f040017;
         public static final int abc_select_dialog_material=0x7f040018;
-        public static final int activity_level1_7x7=0x7f040019;
+        public static final int activity_level =0x7f040019;
         public static final int activity_level1_8x8=0x7f04001a;
         public static final int activity_level2_7x7=0x7f04001b;
         public static final int activity_level2_8x8=0x7f04001c;
@@ -2393,7 +2393,7 @@ containing a value of this type.
         public static final int activity_level3_8x8=0x7f04001e;
         public static final int activity_main=0x7f04001f;
         public static final int activity_secondary=0x7f040020;
-        public static final int content_level1_7x7=0x7f040021;
+        public static final int content_level =0x7f040021;
         public static final int content_level1_8x8=0x7f040022;
         public static final int content_level2_7x7=0x7f040023;
         public static final int content_level2_8x8=0x7f040024;

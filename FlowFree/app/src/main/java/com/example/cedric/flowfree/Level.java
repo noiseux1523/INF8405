@@ -2,10 +2,8 @@ package com.example.cedric.flowfree;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +14,7 @@ import android.widget.TextView;
 import static java.lang.Math.abs;
 import static java.lang.Math.floor;
 
-public class Level1_7x7 extends MainActivity {
+public class Level extends MainActivity {
 
     GridLayout myLayout = null;
     ImageView mainImageView = null;
@@ -33,10 +31,11 @@ public class Level1_7x7 extends MainActivity {
 
     Game g = null;
     int level = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_level1_7x7);
+        setContentView(R.layout.activity_level);
 
         mainImageView = (ImageView) findViewById((R.id.grid77));
         mainImageView.setOnTouchListener(new View.OnTouchListener() {

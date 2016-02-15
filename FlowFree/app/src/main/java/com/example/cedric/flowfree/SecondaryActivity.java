@@ -48,13 +48,13 @@ public class SecondaryActivity extends MainActivity {
 
     private void goToLevel1(boolean grid) {
         if (grid == true){
-            Intent intent = new Intent(this, Level1_7x7.class);
+            Intent intent = new Intent(this, Level.class);
             startActivity(intent);
         }
-        else {
-            Intent intent = new Intent(this, Level1_8x8.class);
-            startActivity(intent);
-        }
+//        else {
+//            Intent intent = new Intent(this, Level1_8x8.class);
+//            startActivity(intent);
+//        }
 
     }
 

@@ -138,9 +138,10 @@ public class Level1_7x7 extends MainActivity {
     }
 
     protected void retry(){
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
+//        Intent intent = getIntent();
+//        finish();
+//        startActivity(intent);
+        g.restart();
     }
 
     private void back(){

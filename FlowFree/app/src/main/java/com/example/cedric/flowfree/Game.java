@@ -1,7 +1,19 @@
 package com.example.cedric.flowfree;
 
+import android.app.Notification;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Pair;
+import android.widget.ImageView;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -17,7 +29,13 @@ public class Game {
     private int size;
 
     public Game(int level) {
-        Point bases[] = {new Point(0, 0), new Point(4, 4)};
+        Point bases[] = {
+                new Point(0, 0), new Point(0, 6),
+                new Point(1, 0), new Point(1, 6),
+                new Point(2, 0), new Point(2, 6),
+                new Point(3, 0), new Point(3, 6),
+                new Point(4, 0), new Point(4, 6),
+        };
         basePoints = new Vector<Point>(Arrays.asList(bases));
         currentPath = new Vector<Point>();
         drawnPaths = new Vector<Vector<Point>>();
@@ -75,7 +93,7 @@ public class Game {
             int min = Math.min(first, second);
             if (min % 2 == 0 && max - min == 1) {
                 currentPath.add(p);
-                drawnPaths.add(currentPath);
+                drawnPaths.add(new Vector<Point>(currentPath));
             }
             currentPath.clear();
             return;
@@ -107,6 +125,75 @@ public class Game {
     public void restart() {
         currentPath.clear();
         drawnPaths.clear();
+    }
+
+
+
+    public void draw(ImageView image, Context context) {
+
+        Resources res = context.getResources();
+        int d = size == 7 ? R.drawable.grid77 : R.drawable.grid88;
+        Bitmap bitmap = BitmapFactory.decodeResource(res, d);
+
+        Bitmap tempBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(tempBitmap);
+
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.CYAN};
+        int squareWidth = canvas.getHeight()/size;
+        int bigDotRadius = (int)((double)squareWidth/2);
+        int rectangleWidth = (int)((double)squareWidth/4);
+
+        Paint paint = new Paint();
+        for (int i = 0 ; i < basePoints.size() ; i+=2) {
+            paint.setColor(colors[i / 2]);
+            //base points
+            for (int j = 0 ; j < 2 ; j++) {
+                Point p1 = basePoints.elementAt(i+j);
+                canvas.drawCircle(p1.x*squareWidth+squareWidth/2, p1.y*squareWidth+squareWidth/2,
+                        bigDotRadius, paint);
+            }
+            //drawn paths
+            boolean broken = false;
+            for (Vector<Point> path:
+                 drawnPaths) {
+                if (path.contains(basePoints.elementAt(i))) {
+                    for (int j = 0 ; j < path.size()-1 ; j++) {
+                        Point p1 = path.elementAt(j);
+                        Point p2 = path.elementAt(j+1);
+                        canvas.drawRect(
+                                Math.min(p1.x, p2.x) * squareWidth + squareWidth / 2 - rectangleWidth / 2,
+                                Math.max(p1.y, p2.y) * squareWidth + squareWidth / 2 + rectangleWidth / 2,
+                                Math.max(p1.x, p2.x) * squareWidth + squareWidth / 2 + rectangleWidth / 2,
+                                Math.min(p1.y, p2.y) * squareWidth + squareWidth / 2 - rectangleWidth / 2,
+                                paint);
+                    }
+                    broken = true;
+                    break;
+                }
+            }
+            if (!broken && !currentPath.isEmpty()) {
+                Point first = currentPath.firstElement();
+                if (first.equals(basePoints.elementAt(i)) || first.equals(basePoints.elementAt(i+1))) {
+                    for (int j = 0 ; j < currentPath.size()-1 ; j++) {
+                        Point p1 = currentPath.elementAt(j);
+                        Point p2 = currentPath.elementAt(j+1);
+                        canvas.drawRect(
+                                Math.min(p1.x, p2.x) * squareWidth + squareWidth / 2 - rectangleWidth / 2,
+                                Math.max(p1.y, p2.y) * squareWidth + squareWidth / 2 + rectangleWidth / 2,
+                                Math.max(p1.x, p2.x) * squareWidth + squareWidth / 2 + rectangleWidth / 2,
+                                Math.min(p1.y, p2.y) * squareWidth + squareWidth / 2 - rectangleWidth / 2,
+                                paint);
+                    }
+                }
+            }
+
+        }
+//
+
+        image.setImageDrawable(new BitmapDrawable(context.getResources(), tempBitmap));
+
     }
 
 }

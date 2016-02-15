@@ -275,6 +275,7 @@
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="character_counter_pattern" translatable="false">%1$d / %2$d</string>
     <string name="second_page">Welcome to the second page!</string>
+    <string name="status1_string">Touch One Status</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="title_activity_level1_8x8">Level1_8x8</string>
     <string name="title_activity_level2_7x7">Level2_7x7</string>

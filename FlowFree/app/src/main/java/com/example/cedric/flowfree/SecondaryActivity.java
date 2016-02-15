@@ -37,58 +37,10 @@ public class SecondaryActivity extends MainActivity {
             }
         });
 
-       /* if (grid == "7x7") {
-
-            Button buttonLevel1 = (Button) findViewById(R.id.buttonLevel1);
-            buttonLevel1.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    goToLevel1_7x7();
-                }
-            });
-
-            Button buttonLevel2 = (Button) findViewById(R.id.buttonLevel2);
-            buttonLevel2.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // IMPLEMENT
-                }
-            });
-
-            Button buttonLevel3 = (Button) findViewById(R.id.buttonLevel3);
-            buttonLevel3.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // IMPLEMENT
-                }
-            });
-
-        } else {
-
-            Button buttonLevel1 = (Button) findViewById(R.id.buttonLevel1);
-            buttonLevel1.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    goToLevel1_8x8();
-                }
-            });
-
-            Button buttonLevel2 = (Button) findViewById(R.id.buttonLevel2);
-            buttonLevel2.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // IMPLEMENT
-                }
-            });
-
-            Button buttonLevel3 = (Button) findViewById(R.id.buttonLevel3);
-            buttonLevel3.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // IMPLEMENT
-                }
-            });
-
-        }*/
-
         Button buttonExit = (Button) findViewById(R.id.buttonExit);
         buttonExit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AppExit();
+                showSimplePopUp();
             }
         });
 
@@ -106,29 +58,11 @@ public class SecondaryActivity extends MainActivity {
 
     }
 
-    private void goToLevel1_7x7() {
-        Intent intent = new Intent(this, Level1_7x7.class);
-        startActivity(intent);
-    }
-
-    private void goToLevel2_7x7() {
+    private void goToLevel2(boolean grid) {
 
     }
 
-    private void goToLevel3_7x7() {
-
-    }
-
-    private void goToLevel1_8x8() {
-        Intent intent = new Intent(this, Level1_8x8.class);
-        startActivity(intent);
-    }
-
-    private void goToLevel2_8x8() {
-
-    }
-
-    private void goToLevel3_8x8() {
+    private void goToLevel3(boolean grid) {
 
     }
 

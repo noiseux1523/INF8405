@@ -3,24 +3,19 @@ package com.example.cedric.flowfree;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.floor;
 
 public class Level extends MainActivity {
 
     TextView header = null;
     ImageView mainImageView = null;
-
-    double[] position = {0,0,0,0,0,0};
 
     public static int maxLevelAllowed7x7 = 1;
     public static int maxLevelAllowed8x8 = 1;
@@ -37,11 +32,12 @@ public class Level extends MainActivity {
         final int level = extras.getInt("level");
 
         header = (TextView) findViewById(R.id.textLevel);
+
         mainImageView = (ImageView) findViewById((R.id.grid77));
         mainImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                handleTouch(event, position);
+                handleTouch(event);
                 return true;
             }
         });
@@ -79,15 +75,9 @@ public class Level extends MainActivity {
         updateHeader();
     }
 
-    private void handleTouch(MotionEvent m, double [] position){
+    private void handleTouch(MotionEvent m){
 
-        double x = (int) m.getX(0);
-        double y = (int) m.getY(0);
         int action = m.getActionMasked();
-        int id = m.getPointerId(0);
-        int actionIndex = m.getActionIndex();
-        String actionString;
-
         int columns = g.getLevel() > 3 ? 8 : 7;
         int boxWidth = mainImageView.getWidth()/columns;///myLayout.getRowCount();
         int idX = (int)floor(m.getX(0) / boxWidth);
@@ -96,25 +86,19 @@ public class Level extends MainActivity {
 
         switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    actionString = "DOWN";
                     g.down(idX, idY) ;
                     break;
                 case MotionEvent.ACTION_UP:
-                    actionString = "UP";
                     g.up();
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN:
-                    actionString = "PNTR DOWN";
                     break;
                 case MotionEvent.ACTION_POINTER_UP:
-                    actionString = "PNTR UP";
                     break;
                 case MotionEvent.ACTION_MOVE: // 25 EST UN CHIFFRE ARBITRAIRE, carré sont 150x150
-                    actionString = "MOVE";
                     g.move(idX, idY) ;
                     break;
                 default:
-                    actionString = "";
         }
 
         g.draw(mainImageView, getApplicationContext());

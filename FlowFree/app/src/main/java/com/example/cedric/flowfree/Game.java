@@ -104,6 +104,7 @@ public class Game {
     public int getLevel(){
         return levelNumber;
     }
+    public int getSize() { return size; }
 
     public void down(int x, int y) {
         currentPath.clear();

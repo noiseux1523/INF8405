@@ -17,21 +17,14 @@ import static java.lang.Math.floor;
 
 public class Level extends MainActivity {
 
-    GridLayout myLayout = null;
+    TextView header = null;
     ImageView mainImageView = null;
     Canvas canvas = null;
 
-    double x_ini;
-    double y_ini;
-    double x_int;
-    double y_int;
-    double x_fin;
-    double y_fin;
 
-    // x_ini, y_ini, x_int, y_int, x_fin, y_fin
-    double[] position = {x_ini, y_ini, x_int, y_int, x_fin, y_fin};
+    double[] position = {0,0,0,0,0,0};
 
-    boolean[] success = {false, false, false, false, false, false};
+    private static int maxLevelAllowed = 1;
 
     Game g = null;
 
@@ -44,6 +37,7 @@ public class Level extends MainActivity {
         Bundle extras = intent.getExtras();
         final int level = extras.getInt("level");
 
+        header = (TextView) findViewById(R.id.textLevel);
         mainImageView = (ImageView) findViewById((R.id.grid77));
         mainImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -77,12 +71,12 @@ public class Level extends MainActivity {
         Button buttonNext = (Button) findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                next(g.getLevel());
+                next();
             }
         });
-
         g = new Game(level);
         g.draw(mainImageView, getApplicationContext());
+        updateHeader();
     }
 
     private void handleTouch(MotionEvent m, double [] position){
@@ -91,14 +85,6 @@ public class Level extends MainActivity {
 
         int pointerCount = m.getPointerCount();
 
-        x_ini = position[0];
-        y_ini = position[1];
-        x_int = position[2];
-        y_int = position[3];
-        x_fin = position[4];
-        y_fin = position[5];
-
-
 
         double x = (int) m.getX(0);
         double y = (int) m.getY(0);
@@ -106,10 +92,13 @@ public class Level extends MainActivity {
         int id = m.getPointerId(0);
         int actionIndex = m.getActionIndex();
         String actionString;
-        int boxWidth = mainImageView.getWidth()/7;///myLayout.getRowCount();
-        int idX = (int)floor(m.getX(0)/boxWidth);
-        int idY = (int)floor(m.getY(0)/boxWidth);
-        if (idX < 0 || idY < 0 || idX > 6 || idY > 7) return;
+
+
+        int columns = g.getLevel() > 3 ? 8 : 7;
+        int boxWidth = mainImageView.getWidth()/columns;///myLayout.getRowCount();
+        int idX = (int)floor(m.getX(0) / boxWidth);
+        int idY = (int)floor(m.getY(0) / boxWidth);
+        if (idX < 0 || idY < 0 || idX >= columns || idY >= columns) return;
 
         switch (action) {
                 case MotionEvent.ACTION_DOWN:
@@ -154,7 +143,6 @@ public class Level extends MainActivity {
                         }
                     });
             if (g.isWon()) {
-                success[g.getLevel() - 1] = true;
                 if (g.getLevel() == 6) {
                     dlgAlert.setMessage("You won! You finished all levels");
                 }
@@ -162,6 +150,7 @@ public class Level extends MainActivity {
                     dlgAlert.setMessage("You won! Try this next level :)");
                     g = new Game(g.getLevel() + 1);
                     g.draw(mainImageView, getApplicationContext());
+                    maxLevelAllowed = Math.max(maxLevelAllowed, g.getLevel());
                 }
             }
             else {
@@ -171,20 +160,19 @@ public class Level extends MainActivity {
             dlgAlert.create().show();
             g.restart();
         }
-        position[0] = x_ini;
-        position[1] = y_ini;
-        position[2] = x_int;
-        position[3] = y_int;
-        position[4] = x_fin;
-        position[5] = y_fin;
+        updateHeader();
+    }
 
+    private void updateHeader() {
+        int level = g.getLevel();
+        int size = g.getSize();
+        header.setText(size + "x" + size + "              Level " + level);
     }
 
     protected void retry(){
-//        Intent intent = getIntent();
-//        finish();
-//        startActivity(intent);
+
         g.restart();
+        g.draw(mainImageView, getApplicationContext());
     }
 
     private void back(int level){
@@ -195,11 +183,12 @@ public class Level extends MainActivity {
             g = new Game(level - 1);
             g.draw(mainImageView, getApplicationContext());
         }
+        updateHeader();
     }
 
-    private void next(int level) {
-        if (success[level - 1]){
-            g = new Game(level + 1);
+    private void next() {
+        if (g.getLevel() + 1 <= maxLevelAllowed){
+            g = new Game(g.getLevel() + 1);
             g.draw(mainImageView, getApplicationContext());
         }
         else{
@@ -215,6 +204,7 @@ public class Level extends MainActivity {
             dlgAlert.setMessage("You have to finish this level first!");
             dlgAlert.create().show();
         }
+        updateHeader();
     }
 
 

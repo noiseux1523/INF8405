@@ -25,32 +25,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.cedric.flowfree.Level1_7x7"
+            android:name="com.example.cedric.flowfree.Level"
             android:label="@string/title_activity_second"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.example.cedric.flowfree.Level1_8x8"
-            android:label="@string/title_activity_level1_8x8"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.example.cedric.flowfree.SecondaryActivity"
             android:label="@string/title_activity_secondary"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.example.cedric.flowfree.Level2_7x7"
-            android:label="@string/title_activity_level2_7x7"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.example.cedric.flowfree.Level3_7x7"
-            android:label="@string/title_activity_level3_7x7"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.example.cedric.flowfree.Level2_8x8"
-            android:label="@string/title_activity_level2_8x8"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.example.cedric.flowfree.Level3_8x8"
-            android:label="@string/title_activity_level3_8x8"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

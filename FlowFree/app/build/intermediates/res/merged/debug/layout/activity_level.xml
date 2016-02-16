@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Level2_8x8">
+    tools:context=".Level">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_level2_8x8"/>
+    <include layout="@layout/content_level"/>
 
     <ImageView
         android:id="@+id/app_title"

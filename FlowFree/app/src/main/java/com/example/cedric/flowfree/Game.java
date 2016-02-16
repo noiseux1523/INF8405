@@ -28,33 +28,67 @@ public class Game {
     private Vector<Vector<Point>> drawnPaths;
     private int size;
     private static Point l1[] = {
-            new Point(0, 0), new Point(0, 6),//red
-            new Point(1, 0), new Point(1, 6),//blue
-            new Point(2, 0), new Point(2, 6),//yellow
-            new Point(3, 0), new Point(3, 6),//green
-            new Point(4, 0), new Point(4, 6),//magenta
-            new Point(5, 0), new Point(5, 6) //cyan
+            new Point(3, 3), new Point(5, 4),//red
+            new Point(0, 1), new Point(0, 6),//blue
+            new Point(3, 4), new Point(4, 5),//yellow
+            new Point(0, 5), new Point(5, 5),//green
+            new Point(1, 5), new Point(4, 4), //gray (orange)
+            //new Point(0, 0), new Point(4, 6), //cyan
+            //new Point(5, 0), new Point(5, 6) //magenta
     };
     private static Point l2[] = {
-            new Point(0, 6), new Point(1, 1),
-            new Point(4, 2), new Point(6, 3),
-            new Point(1, 4), new Point(4, 3),
-            new Point(0, 3), new Point(4, 4),
-            new Point(4, 6), new Point(6, 4),
+            new Point(6, 4), new Point(6, 6), //red
+            new Point(0, 5), new Point(6, 3), //blue
+            new Point(1, 5), new Point(6, 2), //yellow
+            new Point(5, 4), new Point(5, 6), //green
+            new Point(3, 5), new Point(5, 2), //gray (orange)
+            new Point(1, 1), new Point(2, 5), //cyan
+            new Point(2, 2), new Point(5, 1), //magenta (gold)
     };
     private static Point l3[] = {
-            new Point(2, 0), new Point(0, 6),
-            new Point(1, 0), new Point(1, 6),
-            new Point(2, 0), new Point(2, 6),
-            new Point(3, 0), new Point(3, 6),
-            new Point(4, 0), new Point(4, 6),
+            new Point(4, 5), new Point(6, 6),
+            new Point(0, 5), new Point(3, 4),
+            new Point(2, 2), new Point(4, 2),
+            new Point(1, 3), new Point(4, 4),
+            new Point(1, 5), new Point(4, 5),
+            new Point(1, 2), new Point(5, 4),
+           // new Point(4, 0), new Point(4, 6),
+    };
+    private static Point l4[] = {
+            new Point(4, 0), new Point(4, 5), //red
+            new Point(5, 1), new Point(7, 1), //blue
+            new Point(0, 3), new Point(6, 3), //yellow
+            new Point(2, 5), new Point(3, 4), //gray (orange)
+            new Point(7, 2), new Point(7, 7), //cyan
+            new Point(5, 2), new Point(6, 1), //magenta (gold)
+            new Point(0, 0), new Point(0, 2), //bourgogne
+            new Point(2, 4), new Point(5, 3), //turquoise
+    };
+    private static Point l5[] = {
+            new Point(1, 6), new Point(3, 4),
+            new Point(2, 6), new Point(5, 5),
+            new Point(5, 0), new Point(5, 3),
+            new Point(4, 1), new Point(3, 6),
+            new Point(4, 0), new Point(6, 0),
+            //new Point(5, 2), new Point(6, 1), //magenta (gold)
+            //new Point(0, 0), new Point(0, 2), //bourgogne
+            new Point(2, 2), new Point(2, 4), //turquoise
+    };
+    private static Point l6[] = {
+            new Point(2, 5), new Point(4, 4),
+            new Point(1, 1), new Point(2, 6),
+            new Point(3, 5), new Point(5, 1),
+            new Point(3, 1), new Point(4, 3),
+            new Point(0, 4), new Point(4, 1),
+           // new Point(, ), new Point(, ), //magenta (gold)
+            new Point(2, 1), new Point(3, 3), //bourgogne
+            new Point(4, 5), new Point(5, 2), //turquoise
     };
 
     private static Point levels[][] = {l1,l2,l3};
 
 
     public Game(int level) {
-
         basePoints = new Vector<Point>(Arrays.asList(levels[level-1]));
         currentPath = new Vector<Point>();
         drawnPaths = new Vector<Vector<Point>>();
@@ -163,7 +197,7 @@ public class Game {
 
         canvas.drawBitmap(bitmap, 0, 0, null);
 
-        int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.CYAN};
+        int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.GRAY, Color.CYAN, Color.MAGENTA,};
         int squareWidth = canvas.getHeight()/size;
         int bigDotRadius = (int)((double)squareWidth/2);
         int rectangleWidth = (int)((double)squareWidth/4);

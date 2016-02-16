@@ -24,7 +24,7 @@ public class Level extends MainActivity {
 
     double[] position = {0,0,0,0,0,0};
 
-    private static int maxLevelAllowed = 1;
+    public static int maxLevelAllowed = 1;
 
     Game g = null;
 

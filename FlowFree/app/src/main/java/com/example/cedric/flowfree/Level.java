@@ -2,6 +2,7 @@ package com.example.cedric.flowfree;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -19,6 +20,7 @@ public class Level extends MainActivity {
     GridLayout myLayout = null;
     ImageView mainImageView = null;
     Canvas canvas = null;
+
     double x_ini;
     double y_ini;
     double x_int;
@@ -29,13 +31,18 @@ public class Level extends MainActivity {
     // x_ini, y_ini, x_int, y_int, x_fin, y_fin
     double[] position = {x_ini, y_ini, x_int, y_int, x_fin, y_fin};
 
+    boolean[] success = {false, false, false, false, false, false};
+
     Game g = null;
-    int level = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        final int level = extras.getInt("level");
 
         mainImageView = (ImageView) findViewById((R.id.grid77));
         mainImageView.setOnTouchListener(new View.OnTouchListener() {
@@ -63,17 +70,18 @@ public class Level extends MainActivity {
         Button buttonBack = (Button) findViewById(R.id.buttonBack);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                back();
+                back(g.getLevel());
             }
         });
 
         Button buttonNext = (Button) findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                next(g.getLevel());
             }
         });
-        g = new Game(2);
+
+        g = new Game(level);
         g.draw(mainImageView, getApplicationContext());
     }
 
@@ -132,7 +140,9 @@ public class Level extends MainActivity {
             if (id == 0){
                 textView1.setText(touchStatus);
             }
+
         g.draw(mainImageView, getApplicationContext());
+
         if (g.finished()) {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
@@ -144,14 +154,15 @@ public class Level extends MainActivity {
                         }
                     });
             if (g.isWon()) {
-                if (level == 6) {
+                success[g.getLevel() - 1] = true;
+                if (g.getLevel() == 6) {
                     dlgAlert.setMessage("You won! You finished all levels");
                 }
                 else {
                     dlgAlert.setMessage("You won! Try this next level :)");
+                    g = new Game(g.getLevel() + 1);
+                    g.draw(mainImageView, getApplicationContext());
                 }
-
-
             }
             else {
                 dlgAlert.setMessage("You lost... :(");
@@ -176,8 +187,34 @@ public class Level extends MainActivity {
         g.restart();
     }
 
-    private void back(){
-        super.onBackPressed();
+    private void back(int level){
+        if (level == 1) {
+            super.onBackPressed();
+        }
+        else {
+            g = new Game(level - 1);
+            g.draw(mainImageView, getApplicationContext());
+        }
+    }
+
+    private void next(int level) {
+        if (success[level - 1]){
+            g = new Game(level + 1);
+            g.draw(mainImageView, getApplicationContext());
+        }
+        else{
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setTitle("FlowFree");
+            dlgAlert.setCancelable(true);
+            dlgAlert.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+            dlgAlert.setMessage("You have to finish this level first!");
+            dlgAlert.create().show();
+        }
     }
 
 

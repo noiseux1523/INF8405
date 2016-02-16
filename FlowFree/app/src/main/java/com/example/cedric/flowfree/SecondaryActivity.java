@@ -26,14 +26,14 @@ public class SecondaryActivity extends MainActivity {
         Button buttonLevel2 = (Button) findViewById(R.id.buttonLevel2);
         buttonLevel2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // IMPLEMENT
+                goToLevel2(grid);
             }
         });
 
         Button buttonLevel3 = (Button) findViewById(R.id.buttonLevel3);
         buttonLevel3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // IMPLEMENT
+                goToLevel3(grid);
             }
         });
 
@@ -48,22 +48,47 @@ public class SecondaryActivity extends MainActivity {
 
     private void goToLevel1(boolean grid) {
         if (grid == true){
-            Intent intent = new Intent(this, Level.class);
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            int level = 1;
+            intent.putExtra("level", level);
             startActivity(intent);
         }
-//        else {
-//            Intent intent = new Intent(this, Level1_8x8.class);
-//            startActivity(intent);
-//        }
-
+        else {
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            int level = 4;
+            intent.putExtra("level", level);
+            startActivity(intent);
+        }
     }
 
     private void goToLevel2(boolean grid) {
-
+        if (grid == true){
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            int level = 2;
+            intent.putExtra("level", level);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            int level = 5;
+            intent.putExtra("level", level);
+            startActivity(intent);
+        }
     }
 
     private void goToLevel3(boolean grid) {
-
+        if (grid == true){
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            int level = 3;
+            intent.putExtra("level", level);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            int level = 6;
+            intent.putExtra("level", level);
+            startActivity(intent);
+        }
     }
 
 }

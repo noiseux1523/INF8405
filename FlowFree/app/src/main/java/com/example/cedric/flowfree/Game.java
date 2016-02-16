@@ -27,10 +27,12 @@ public class Game {
     private Vector<Point> currentPath;
     private Vector<Vector<Point>> drawnPaths;
     private int size;
+    private int levelNumber;
+
     private static Point l1[] = {
-            new Point(3, 3), new Point(5, 4),//red
+            new Point(2, 2), new Point(4, 3),//red
             new Point(0, 1), new Point(0, 6),//blue
-            new Point(3, 4), new Point(4, 5),//yellow
+            new Point(2, 4), new Point(4, 5),//yellow
             new Point(0, 5), new Point(5, 5),//green
             new Point(1, 5), new Point(4, 4), //gray (orange)
             //new Point(0, 0), new Point(4, 6), //cyan
@@ -46,7 +48,7 @@ public class Game {
             new Point(2, 2), new Point(5, 1), //magenta (gold)
     };
     private static Point l3[] = {
-            new Point(4, 5), new Point(6, 6),
+            new Point(3, 5), new Point(6, 6),
             new Point(0, 5), new Point(3, 4),
             new Point(2, 2), new Point(4, 2),
             new Point(1, 3), new Point(4, 4),
@@ -58,6 +60,7 @@ public class Game {
             new Point(4, 0), new Point(4, 5), //red
             new Point(5, 1), new Point(7, 1), //blue
             new Point(0, 3), new Point(6, 3), //yellow
+            new Point(0, 1), new Point(2, 2), //green
             new Point(2, 5), new Point(3, 4), //gray (orange)
             new Point(7, 2), new Point(7, 7), //cyan
             new Point(5, 2), new Point(6, 1), //magenta (gold)
@@ -68,6 +71,7 @@ public class Game {
             new Point(1, 6), new Point(3, 4),
             new Point(2, 6), new Point(5, 5),
             new Point(5, 0), new Point(5, 3),
+            new Point(6, 1), new Point(6, 3),
             new Point(4, 1), new Point(3, 6),
             new Point(4, 0), new Point(6, 0),
             //new Point(5, 2), new Point(6, 1), //magenta (gold)
@@ -78,6 +82,7 @@ public class Game {
             new Point(2, 5), new Point(4, 4),
             new Point(1, 1), new Point(2, 6),
             new Point(3, 5), new Point(5, 1),
+            new Point(0, 3), new Point(3, 0),
             new Point(3, 1), new Point(4, 3),
             new Point(0, 4), new Point(4, 1),
            // new Point(, ), new Point(, ), //magenta (gold)
@@ -85,7 +90,7 @@ public class Game {
             new Point(4, 5), new Point(5, 2), //turquoise
     };
 
-    private static Point levels[][] = {l1,l2,l3};
+    private static Point levels[][] = {l1,l2,l3,l4,l5,l6};
 
 
     public Game(int level) {
@@ -93,6 +98,11 @@ public class Game {
         currentPath = new Vector<Point>();
         drawnPaths = new Vector<Vector<Point>>();
         size = level > 3 ? 8 : 7;
+        levelNumber = level;
+    }
+
+    public int getLevel(){
+        return levelNumber;
     }
 
     public void down(int x, int y) {
@@ -197,7 +207,7 @@ public class Game {
 
         canvas.drawBitmap(bitmap, 0, 0, null);
 
-        int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.GRAY, Color.CYAN, Color.MAGENTA,};
+        int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.DKGRAY, Color.CYAN, Color.MAGENTA, Color.WHITE, Color.LTGRAY};
         int squareWidth = canvas.getHeight()/size;
         int bigDotRadius = (int)((double)squareWidth/2);
         int rectangleWidth = (int)((double)squareWidth/4);

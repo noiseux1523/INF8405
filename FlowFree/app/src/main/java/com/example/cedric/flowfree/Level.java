@@ -21,10 +21,10 @@ public class Level extends MainActivity {
     ImageView mainImageView = null;
     Canvas canvas = null;
 
-
     double[] position = {0,0,0,0,0,0};
 
-    public static int maxLevelAllowed = 1;
+    public static int maxLevelAllowed7x7 = 1;
+    public static int maxLevelAllowed8x8 = 1;
 
     Game g = null;
 
@@ -74,6 +74,7 @@ public class Level extends MainActivity {
                 next();
             }
         });
+
         g = new Game(level);
         g.draw(mainImageView, getApplicationContext());
         updateHeader();
@@ -136,24 +137,50 @@ public class Level extends MainActivity {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
-            dlgAlert.setPositiveButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //dismiss the dialog
-                        }
-                    });
             if (g.isWon()) {
+
                 if (g.getLevel() == 6) {
+                    dlgAlert.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //dismiss the dialog
+                                }
+                            });
                     dlgAlert.setMessage("You won! You finished all levels");
                 }
                 else {
+                    dlgAlert.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    g = new Game(g.getLevel() + 1);
+                                    g.draw(mainImageView, getApplicationContext());
+                                    if (g.getLevel() < 4){
+                                        maxLevelAllowed7x7 = Math.max(maxLevelAllowed7x7, g.getLevel());
+                                    }
+                                    else {
+                                        maxLevelAllowed8x8 = Math.max(maxLevelAllowed8x8, g.getLevel() - 3);
+                                    }
+                                    updateHeader();
+                                }
+                            });
+                    dlgAlert.setNeutralButton("Retry",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //dismiss the dialog
+                                }
+                            });
                     dlgAlert.setMessage("You won! Try this next level :)");
-                    g = new Game(g.getLevel() + 1);
-                    g.draw(mainImageView, getApplicationContext());
-                    maxLevelAllowed = Math.max(maxLevelAllowed, g.getLevel());
                 }
+
             }
             else {
+                dlgAlert.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //dismiss the dialog
+                            }
+                        });
                 dlgAlert.setMessage("You lost... :(");
             }
 
@@ -166,7 +193,12 @@ public class Level extends MainActivity {
     private void updateHeader() {
         int level = g.getLevel();
         int size = g.getSize();
-        header.setText(size + "x" + size + "              Level " + level);
+        if (g.getLevel() < 4){
+            header.setText(size + "x" + size + "              Level " + level);
+        }
+        else {
+            header.setText(size + "x" + size + "              Level " + (level - 3));
+        }
     }
 
     protected void retry(){
@@ -179,7 +211,20 @@ public class Level extends MainActivity {
         if (level == 1) {
             super.onBackPressed();
         }
-        else {
+        else if (level == 4 && maxLevelAllowed7x7 < 3) {
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setTitle("FlowFree");
+            dlgAlert.setCancelable(true);
+            dlgAlert.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+            dlgAlert.setMessage("You have to complete the 7x7 grid levels first!");
+            dlgAlert.create().show();
+        }
+        else  {
             g = new Game(level - 1);
             g.draw(mainImageView, getApplicationContext());
         }
@@ -187,9 +232,23 @@ public class Level extends MainActivity {
     }
 
     private void next() {
-        if (g.getLevel() + 1 <= maxLevelAllowed){
+        if ((g.getLevel() < 3 && g.getLevel() + 1 <= maxLevelAllowed7x7)
+                || (g.getLevel() > 2 && g.getLevel() < 6 && ((g.getLevel() + 1) - 3) <= maxLevelAllowed8x8)) {
             g = new Game(g.getLevel() + 1);
             g.draw(mainImageView, getApplicationContext());
+        }
+        else if (g.getLevel() == 6) {
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setTitle("FlowFree");
+            dlgAlert.setCancelable(true);
+            dlgAlert.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+            dlgAlert.setMessage("You completed the game, no more levels are available!");
+            dlgAlert.create().show();
         }
         else{
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);

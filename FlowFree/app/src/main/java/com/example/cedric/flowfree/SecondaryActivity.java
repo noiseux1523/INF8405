@@ -1,5 +1,7 @@
 package com.example.cedric.flowfree;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -48,10 +50,25 @@ public class SecondaryActivity extends MainActivity {
 
     private void playLevel(int level, boolean grid) {
         int l = grid ? level : level + 3;
-        if (Level.maxLevelAllowed < l) return;
-        Intent intent = new Intent(SecondaryActivity.this, Level.class);
-        intent.putExtra("level", l);
-        startActivity(intent);
+        if ((grid && Level.maxLevelAllowed7x7 < level)
+                || (!grid && Level.maxLevelAllowed8x8 < level)) {
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            dlgAlert.setTitle("FlowFree");
+            dlgAlert.setCancelable(true);
+            dlgAlert.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+            dlgAlert.setMessage("You have to complete the previous level first!");
+            dlgAlert.create().show();
+        }
+        else {
+            Intent intent = new Intent(SecondaryActivity.this, Level.class);
+            intent.putExtra("level", l);
+            startActivity(intent);
+        }
     }
 
 }

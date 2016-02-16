@@ -50,6 +50,7 @@ public class SecondaryActivity extends MainActivity {
 
     private void playLevel(int level, boolean grid) {
         int l = grid ? level : level + 3;
+
         if ((grid && Level.maxLevelAllowed7x7 < level)
                 || (!grid && Level.maxLevelAllowed8x8 < level)) {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
@@ -64,6 +65,7 @@ public class SecondaryActivity extends MainActivity {
             dlgAlert.setMessage("You have to complete the previous level first!");
             dlgAlert.create().show();
         }
+
         else {
             Intent intent = new Intent(SecondaryActivity.this, Level.class);
             intent.putExtra("level", l);

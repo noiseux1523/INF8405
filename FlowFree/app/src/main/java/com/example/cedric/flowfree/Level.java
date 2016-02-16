@@ -19,7 +19,6 @@ public class Level extends MainActivity {
 
     TextView header = null;
     ImageView mainImageView = null;
-    Canvas canvas = null;
 
     double[] position = {0,0,0,0,0,0};
 
@@ -82,18 +81,12 @@ public class Level extends MainActivity {
 
     private void handleTouch(MotionEvent m, double [] position){
 
-        TextView textView1 = (TextView)findViewById(R.id.textView1);
-
-        int pointerCount = m.getPointerCount();
-
-
         double x = (int) m.getX(0);
         double y = (int) m.getY(0);
         int action = m.getActionMasked();
         int id = m.getPointerId(0);
         int actionIndex = m.getActionIndex();
         String actionString;
-
 
         int columns = g.getLevel() > 3 ? 8 : 7;
         int boxWidth = mainImageView.getWidth()/columns;///myLayout.getRowCount();
@@ -122,14 +115,7 @@ public class Level extends MainActivity {
                     break;
                 default:
                     actionString = "";
-            }
-
-            String touchStatus = "Action: " + actionString /*+ " Index: " + actionIndex + " ID: " +
-            id +*/+ " X: " + idX + " Y: " + idY;
-
-            if (id == 0){
-                textView1.setText(touchStatus);
-            }
+        }
 
         g.draw(mainImageView, getApplicationContext());
 
@@ -137,8 +123,8 @@ public class Level extends MainActivity {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
-            if (g.isWon()) {
 
+            if (g.isWon()) {
                 if (g.getLevel() == 6) {
                     dlgAlert.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
@@ -172,7 +158,6 @@ public class Level extends MainActivity {
                             });
                     dlgAlert.setMessage("You won! Try this next level :)");
                 }
-
             }
             else {
                 dlgAlert.setPositiveButton("OK",
@@ -187,12 +172,14 @@ public class Level extends MainActivity {
             dlgAlert.create().show();
             g.restart();
         }
+
         updateHeader();
     }
 
     private void updateHeader() {
         int level = g.getLevel();
         int size = g.getSize();
+
         if (g.getLevel() < 4){
             header.setText(size + "x" + size + "              Level " + level);
         }
@@ -202,7 +189,6 @@ public class Level extends MainActivity {
     }
 
     protected void retry(){
-
         g.restart();
         g.draw(mainImageView, getApplicationContext());
     }
@@ -250,7 +236,7 @@ public class Level extends MainActivity {
             dlgAlert.setMessage("You completed the game, no more levels are available!");
             dlgAlert.create().show();
         }
-        else{
+        else {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
@@ -265,6 +251,4 @@ public class Level extends MainActivity {
         }
         updateHeader();
     }
-
-
 }

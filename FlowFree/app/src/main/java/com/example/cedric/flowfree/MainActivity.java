@@ -40,28 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void goToLevel_7x7() {
         Intent intent = new Intent(this, SecondaryActivity.class);
         intent.putExtra("grid", true);
@@ -84,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void showSimplePopUp() {
-
         AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
         helpBuilder.setMessage("Are you sure you want to exit?");
         helpBuilder.setPositiveButton("Yes",
@@ -100,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
                         // Retour à l'activite principale
                     }
                 });
-
-        // Remember, create doesn't show the dialog
         AlertDialog helpDialog = helpBuilder.create();
         helpDialog.show();
     }

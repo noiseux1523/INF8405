@@ -94,16 +94,6 @@
         android:textSize="21dp"
         android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/status1_string"
-        android:layout_above="@+id/grid77"
-        android:layout_alignEnd="@+id/grid77"
-        android:textStyle="bold"
-        android:textColor="#ffffff" />
-
     <!--<ImageView-->
         <!--android:id="@+id/square"-->
         <!--android:src="@drawable/green_square"-->

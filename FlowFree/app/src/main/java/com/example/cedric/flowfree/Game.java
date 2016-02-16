@@ -35,8 +35,7 @@ public class Game {
             new Point(2, 4), new Point(4, 5),//yellow
             new Point(0, 5), new Point(5, 5),//green
             new Point(1, 5), new Point(4, 4), //gray (orange)
-            //new Point(0, 0), new Point(4, 6), //cyan
-            //new Point(5, 0), new Point(5, 6) //magenta
+
     };
     private static Point l2[] = {
             new Point(6, 4), new Point(6, 6), //red
@@ -54,7 +53,6 @@ public class Game {
             new Point(1, 3), new Point(4, 4),
             new Point(1, 5), new Point(4, 5),
             new Point(1, 2), new Point(5, 4),
-           // new Point(4, 0), new Point(4, 6),
     };
     private static Point l4[] = {
             new Point(4, 0), new Point(4, 5), //red
@@ -74,8 +72,6 @@ public class Game {
             new Point(6, 1), new Point(6, 3),
             new Point(4, 1), new Point(3, 6),
             new Point(4, 0), new Point(6, 0),
-            //new Point(5, 2), new Point(6, 1), //magenta (gold)
-            //new Point(0, 0), new Point(0, 2), //bourgogne
             new Point(2, 2), new Point(2, 4), //turquoise
     };
     private static Point l6[] = {
@@ -85,7 +81,6 @@ public class Game {
             new Point(0, 3), new Point(3, 0),
             new Point(3, 1), new Point(4, 3),
             new Point(0, 4), new Point(4, 1),
-           // new Point(, ), new Point(, ), //magenta (gold)
             new Point(2, 1), new Point(3, 3), //bourgogne
             new Point(4, 5), new Point(5, 2), //turquoise
     };
@@ -104,6 +99,7 @@ public class Game {
     public int getLevel(){
         return levelNumber;
     }
+
     public int getSize() { return size; }
 
     public void down(int x, int y) {
@@ -120,19 +116,24 @@ public class Game {
                 break;
             }
         }
+
         if (pathToDelete != null) {
             drawnPaths.remove(pathToDelete);
             return;
         }
+
         if (basePoints.contains(p)) currentPath.add(p);
     }
 
     public void move(int x, int y) {
         Point p = new Point(x, y);
+
         //No moving if not initialized
         if (currentPath.isEmpty()) return;
+
         // the point did not change
         if (currentPath.lastElement().equals(p)) return;
+
         if (currentPath.contains(p)) {
             //go back one square
             if (currentPath.indexOf(p) == currentPath.size()-2 )
@@ -141,6 +142,7 @@ public class Game {
             else currentPath.clear();
             return;
         }
+
         //collision with already drawn paths
         for (Vector<Point> path:
              drawnPaths) {
@@ -149,6 +151,7 @@ public class Game {
                 return;
             }
         }
+
         //collision with a base point
         if (basePoints.contains(p)) {
             int first = basePoints.indexOf(currentPath.firstElement());
@@ -179,10 +182,12 @@ public class Game {
 
     public boolean isWon() {
         int count = 0;
+
         for (Vector<Point> path:
              drawnPaths) {
             count += path.size();
         }
+
         return count == size * size;
     }
 
@@ -216,12 +221,14 @@ public class Game {
         Paint paint = new Paint();
         for (int i = 0 ; i < basePoints.size() ; i+=2) {
             paint.setColor(colors[i / 2]);
+
             //base points
             for (int j = 0 ; j < 2 ; j++) {
                 Point p1 = basePoints.elementAt(i+j);
                 canvas.drawCircle(p1.x*squareWidth+squareWidth/2, p1.y*squareWidth+squareWidth/2,
                         bigDotRadius, paint);
             }
+
             //drawn paths
             boolean broken = false;
             for (Vector<Point> path:
@@ -241,6 +248,7 @@ public class Game {
                     break;
                 }
             }
+
             if (!broken && !currentPath.isEmpty()) {
                 Point first = currentPath.firstElement();
                 if (first.equals(basePoints.elementAt(i)) || first.equals(basePoints.elementAt(i+1))) {
@@ -256,12 +264,8 @@ public class Game {
                     }
                 }
             }
-
         }
-//
 
         image.setImageDrawable(new BitmapDrawable(context.getResources(), tempBitmap));
-
     }
-
 }

@@ -13,6 +13,13 @@
     tools:context="com.example.cedric.flowfree.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ImageView
+        android:id="@+id/app_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/title"
+        />
+
     <TextView
         android:layout_width="250dp"
         android:layout_height="75dp"
@@ -58,9 +65,9 @@
         android:text="EXIT"
         android:id="@+id/buttonExit"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textColor="#ff0000"
-        android:textSize="35dp" />
+        android:textSize="35dp"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

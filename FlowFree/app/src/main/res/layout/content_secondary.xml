@@ -13,6 +13,13 @@
     tools:context="com.example.cedric.flowfree.SecondaryActivity"
     tools:showIn="@layout/activity_secondary">
 
+    <ImageView
+        android:id="@+id/app_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/title"
+        />
+
     <TextView
         android:layout_width="150dp"
         android:layout_height="75dp"
@@ -22,9 +29,8 @@
         android:textSize="60dp"
         android:textIsSelectable="false"
         android:textStyle="bold"
-        android:layout_marginBottom="83dp"
-        android:layout_alignBottom="@+id/buttonLevel1"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/buttonLevel1" />
 
     <Button
         android:layout_width="100dp"
@@ -35,9 +41,8 @@
         android:textSize="50dp"
         android:textColor="#26ff00"
         android:allowUndo="false"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="191dp" />
+        android:layout_above="@+id/buttonLevel2"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:layout_width="100dp"
@@ -48,8 +53,10 @@
         android:textSize="50dp"
         android:textColor="#ffff00"
         android:allowUndo="false"
-        android:layout_below="@+id/buttonLevel1"
-        android:layout_alignStart="@+id/buttonLevel1" />
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="false" />
 
     <Button
         android:layout_width="100dp"

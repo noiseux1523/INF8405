@@ -15,6 +15,13 @@
     tools:context=".Level">
 
     <ImageView
+        android:id="@+id/app_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/title"
+        android:layout_above="@+id/textLevel" />
+
+    <ImageView
         android:id="@+id/grid77"
         android:src="@drawable/grid77"
         android:layout_width="50dp"

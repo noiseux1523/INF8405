@@ -2203,9 +2203,11 @@ containing a value of this type.
         public static final int design_fab_background=0x7f02004a;
         public static final int design_snackbar_background=0x7f02004b;
         public static final int grid77=0x7f02004c;
-        public static final int grid88=0x7f02004d;
-        public static final int notification_template_icon_bg=0x7f02004f;
-        public static final int title=0x7f02004e;
+        public static final int grid77_big=0x7f02004d;
+        public static final int grid88=0x7f02004e;
+        public static final int grid88_big=0x7f02004f;
+        public static final int notification_template_icon_bg=0x7f020051;
+        public static final int title=0x7f020050;
     }
     public static final class id {
         public static final int action0=0x7f0c007c;
@@ -2236,7 +2238,7 @@ containing a value of this type.
         public static final int buttonLevel1=0x7f0c0071;
         public static final int buttonLevel2=0x7f0c0073;
         public static final int buttonLevel3=0x7f0c0074;
-        public static final int buttonNext=0x7f0c006b;
+        public static final int buttonNext=0x7f0c006c;
         public static final int buttonPanel=0x7f0c0044;
         public static final int buttonRetry=0x7f0c006e;
         public static final int cancel_action=0x7f0c007d;
@@ -2270,7 +2272,7 @@ containing a value of this type.
         public static final int fill_horizontal=0x7f0c002e;
         public static final int fill_vertical=0x7f0c0021;
         public static final int fixed=0x7f0c0037;
-        public static final int grid77=0x7f0c006a;
+        public static final int grid77=0x7f0c006b;
         public static final int home=0x7f0c0004;
         public static final int homeAsUp=0x7f0c000f;
         public static final int icon=0x7f0c0042;
@@ -2334,7 +2336,7 @@ containing a value of this type.
         public static final int text=0x7f0c0086;
         public static final int text2=0x7f0c0084;
         public static final int textGridSize=0x7f0c0070;
-        public static final int textLevel=0x7f0c006c;
+        public static final int textLevel=0x7f0c006a;
         public static final int textSpacerNoButtons=0x7f0c004d;
         public static final int time=0x7f0c0082;
         public static final int title=0x7f0c0043;

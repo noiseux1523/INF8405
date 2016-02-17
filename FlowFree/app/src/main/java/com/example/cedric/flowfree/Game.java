@@ -216,7 +216,7 @@ public class Game {
 
         int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.DKGRAY, Color.CYAN, Color.MAGENTA, Color.WHITE, Color.LTGRAY};
         int squareWidth = canvas.getHeight() / size;
-        int bigDotRadius = (int) ((double) squareWidth / 2);
+        int bigDotRadius = (int) ((double) squareWidth / 2.25);
         int rectangleWidth = (int) ((double) squareWidth / 4);
 
         Paint paint = new Paint();

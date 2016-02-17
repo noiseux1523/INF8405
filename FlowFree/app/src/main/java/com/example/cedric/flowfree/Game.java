@@ -29,6 +29,8 @@ public class Game {
     private int size;
     private int levelNumber;
 
+
+    //Création des niveaux;
     private static Point l1[] = {
             new Point(2, 2), new Point(4, 3),//red
             new Point(0, 1), new Point(0, 6),//blue
@@ -84,10 +86,10 @@ public class Game {
             new Point(2, 1), new Point(3, 3), //bourgogne
             new Point(4, 5), new Point(5, 2), //turquoise
     };
-
+    
     private static Point levels[][] = {l1, l2, l3, l4, l5, l6};
 
-
+    //Constructeur
     public Game(int level) {
         basePoints = new Vector<Point>(Arrays.asList(levels[level - 1]));
         currentPath = new Vector<Point>();
@@ -96,14 +98,17 @@ public class Game {
         levelNumber = level;
     }
 
+    //Retourne le niveau courant
     public int getLevel() {
         return levelNumber;
     }
 
+    //Retourne la taille de la grille
     public int getSize() {
         return size;
     }
 
+    // Quand le doigt est déposé sur la grille
     public void down(int x, int y) {
         currentPath.clear();
         Point p = new Point(x, y);
@@ -127,6 +132,7 @@ public class Game {
         if (basePoints.contains(p)) currentPath.add(p);
     }
 
+    //Le doigt en contact avec la grille se déplace
     public void move(int x, int y) {
         Point p = new Point(x, y);
 
@@ -178,10 +184,12 @@ public class Game {
         currentPath.add(p);
     }
 
+    //Vérification de si la partie est terminée ou pas
     public boolean finished() {
         return basePoints.size() / 2 == drawnPaths.size();
     }
 
+    //Vérification de si la parite est gagnée
     public boolean isWon() {
         int count = 0;
 
@@ -193,16 +201,18 @@ public class Game {
         return count == size * size;
     }
 
+    //Le doigt de l'utilisateur se lève
     public void up() {
         currentPath.clear();
     }
 
+    //Recommencer la partie
     public void restart() {
         currentPath.clear();
         drawnPaths.clear();
     }
 
-
+    //Affichage de la grille de jeu
     public void draw(ImageView image, Context context) {
 
         Resources res = context.getResources();

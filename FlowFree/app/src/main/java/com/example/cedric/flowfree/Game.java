@@ -85,22 +85,24 @@ public class Game {
             new Point(4, 5), new Point(5, 2), //turquoise
     };
 
-    private static Point levels[][] = {l1,l2,l3,l4,l5,l6};
+    private static Point levels[][] = {l1, l2, l3, l4, l5, l6};
 
 
     public Game(int level) {
-        basePoints = new Vector<Point>(Arrays.asList(levels[level-1]));
+        basePoints = new Vector<Point>(Arrays.asList(levels[level - 1]));
         currentPath = new Vector<Point>();
         drawnPaths = new Vector<Vector<Point>>();
         size = level > 3 ? 8 : 7;
         levelNumber = level;
     }
 
-    public int getLevel(){
+    public int getLevel() {
         return levelNumber;
     }
 
-    public int getSize() { return size; }
+    public int getSize() {
+        return size;
+    }
 
     public void down(int x, int y) {
         currentPath.clear();
@@ -109,9 +111,9 @@ public class Game {
         Vector<Point> pathToDelete = null;
 
         //if a drawn path is clicked, the path is deleted
-        for (Vector<Point> path:
-             drawnPaths) {
-            if (path.contains(p)){
+        for (Vector<Point> path :
+                drawnPaths) {
+            if (path.contains(p)) {
                 pathToDelete = path;
                 break;
             }
@@ -136,16 +138,16 @@ public class Game {
 
         if (currentPath.contains(p)) {
             //go back one square
-            if (currentPath.indexOf(p) == currentPath.size()-2 )
-                currentPath.removeElementAt(currentPath.size()-1);
-            //collision with line in current path
+            if (currentPath.indexOf(p) == currentPath.size() - 2)
+                currentPath.removeElementAt(currentPath.size() - 1);
+                //collision with line in current path
             else currentPath.clear();
             return;
         }
 
         //collision with already drawn paths
-        for (Vector<Point> path:
-             drawnPaths) {
+        for (Vector<Point> path :
+                drawnPaths) {
             if (path.contains(p)) {
                 currentPath.clear();
                 return;
@@ -168,7 +170,7 @@ public class Game {
 
         //if not adjacent to previous
         int distance = Math.abs(p.x - currentPath.lastElement().x) + Math.abs(p.y - currentPath.lastElement().y);
-        if (distance != 1){
+        if (distance != 1) {
             currentPath.clear();
             return;
         }
@@ -177,14 +179,14 @@ public class Game {
     }
 
     public boolean finished() {
-        return basePoints.size()/2 == drawnPaths.size();
+        return basePoints.size() / 2 == drawnPaths.size();
     }
 
     public boolean isWon() {
         int count = 0;
 
-        for (Vector<Point> path:
-             drawnPaths) {
+        for (Vector<Point> path :
+                drawnPaths) {
             count += path.size();
         }
 
@@ -201,7 +203,6 @@ public class Game {
     }
 
 
-
     public void draw(ImageView image, Context context) {
 
         Resources res = context.getResources();
@@ -214,29 +215,29 @@ public class Game {
         canvas.drawBitmap(bitmap, 0, 0, null);
 
         int colors[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.DKGRAY, Color.CYAN, Color.MAGENTA, Color.WHITE, Color.LTGRAY};
-        int squareWidth = canvas.getHeight()/size;
-        int bigDotRadius = (int)((double)squareWidth/2);
-        int rectangleWidth = (int)((double)squareWidth/4);
+        int squareWidth = canvas.getHeight() / size;
+        int bigDotRadius = (int) ((double) squareWidth / 2);
+        int rectangleWidth = (int) ((double) squareWidth / 4);
 
         Paint paint = new Paint();
-        for (int i = 0 ; i < basePoints.size() ; i+=2) {
+        for (int i = 0; i < basePoints.size(); i += 2) {
             paint.setColor(colors[i / 2]);
 
             //base points
-            for (int j = 0 ; j < 2 ; j++) {
-                Point p1 = basePoints.elementAt(i+j);
-                canvas.drawCircle(p1.x*squareWidth+squareWidth/2, p1.y*squareWidth+squareWidth/2,
+            for (int j = 0; j < 2; j++) {
+                Point p1 = basePoints.elementAt(i + j);
+                canvas.drawCircle(p1.x * squareWidth + squareWidth / 2, p1.y * squareWidth + squareWidth / 2,
                         bigDotRadius, paint);
             }
 
             //drawn paths
             boolean broken = false;
-            for (Vector<Point> path:
-                 drawnPaths) {
+            for (Vector<Point> path :
+                    drawnPaths) {
                 if (path.contains(basePoints.elementAt(i))) {
-                    for (int j = 0 ; j < path.size()-1 ; j++) {
+                    for (int j = 0; j < path.size() - 1; j++) {
                         Point p1 = path.elementAt(j);
-                        Point p2 = path.elementAt(j+1);
+                        Point p2 = path.elementAt(j + 1);
                         canvas.drawRect(
                                 Math.min(p1.x, p2.x) * squareWidth + squareWidth / 2 - rectangleWidth / 2,
                                 Math.max(p1.y, p2.y) * squareWidth + squareWidth / 2 + rectangleWidth / 2,
@@ -251,10 +252,10 @@ public class Game {
 
             if (!broken && !currentPath.isEmpty()) {
                 Point first = currentPath.firstElement();
-                if (first.equals(basePoints.elementAt(i)) || first.equals(basePoints.elementAt(i+1))) {
-                    for (int j = 0 ; j < currentPath.size()-1 ; j++) {
+                if (first.equals(basePoints.elementAt(i)) || first.equals(basePoints.elementAt(i + 1))) {
+                    for (int j = 0; j < currentPath.size() - 1; j++) {
                         Point p1 = currentPath.elementAt(j);
-                        Point p2 = currentPath.elementAt(j+1);
+                        Point p2 = currentPath.elementAt(j + 1);
                         canvas.drawRect(
                                 Math.min(p1.x, p2.x) * squareWidth + squareWidth / 2 - rectangleWidth / 2,
                                 Math.max(p1.y, p2.y) * squareWidth + squareWidth / 2 + rectangleWidth / 2,

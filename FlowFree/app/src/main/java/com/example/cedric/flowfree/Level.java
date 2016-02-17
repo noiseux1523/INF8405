@@ -75,36 +75,36 @@ public class Level extends MainActivity {
         updateHeader();
     }
 
-    private void handleTouch(MotionEvent m){
+    private void handleTouch(MotionEvent m) {
 
         int action = m.getActionMasked();
         int columns = g.getLevel() > 3 ? 8 : 7;
-        int boxWidth = mainImageView.getWidth()/columns;///myLayout.getRowCount();
-        int idX = (int)floor(m.getX(0) / boxWidth);
-        int idY = (int)floor(m.getY(0) / boxWidth);
+        int boxWidth = mainImageView.getWidth() / columns;///myLayout.getRowCount();
+        int idX = (int) floor(m.getX(0) / boxWidth);
+        int idY = (int) floor(m.getY(0) / boxWidth);
         if (idX < 0 || idY < 0 || idX >= columns || idY >= columns) return;
 
         switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    g.down(idX, idY) ;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    g.up();
-                    break;
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    break;
-                case MotionEvent.ACTION_POINTER_UP:
-                    break;
-                case MotionEvent.ACTION_MOVE: // 25 EST UN CHIFFRE ARBITRAIRE, carré sont 150x150
-                    g.move(idX, idY) ;
-                    break;
-                default:
+            case MotionEvent.ACTION_DOWN:
+                g.down(idX, idY);
+                break;
+            case MotionEvent.ACTION_UP:
+                g.up();
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
+            case MotionEvent.ACTION_MOVE: // 25 EST UN CHIFFRE ARBITRAIRE, carré sont 150x150
+                g.move(idX, idY);
+                break;
+            default:
         }
 
         g.draw(mainImageView, getApplicationContext());
 
         if (g.finished()) {
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
 
@@ -113,21 +113,23 @@ public class Level extends MainActivity {
                     dlgAlert.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //dismiss the dialog
+                                    if (g.getLevel() < 4) {
+                                        maxLevelAllowed7x7 = Math.max(maxLevelAllowed7x7, g.getLevel() + 1);
+                                    } else {
+                                        maxLevelAllowed8x8 = Math.max(maxLevelAllowed8x8, g.getLevel() + 1 - 3);
+                                    }
                                 }
                             });
                     dlgAlert.setMessage("You won! You finished all levels");
-                }
-                else {
+                } else {
                     dlgAlert.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     g = new Game(g.getLevel() + 1);
                                     g.draw(mainImageView, getApplicationContext());
-                                    if (g.getLevel() < 4){
+                                    if (g.getLevel() < 4) {
                                         maxLevelAllowed7x7 = Math.max(maxLevelAllowed7x7, g.getLevel());
-                                    }
-                                    else {
+                                    } else {
                                         maxLevelAllowed8x8 = Math.max(maxLevelAllowed8x8, g.getLevel() - 3);
                                     }
                                     updateHeader();
@@ -137,13 +139,16 @@ public class Level extends MainActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //dismiss the dialog
+                                    if (g.getLevel() < 4) {
+                                        maxLevelAllowed7x7 = Math.max(maxLevelAllowed7x7, g.getLevel() + 1);
+                                    } else {
+                                        maxLevelAllowed8x8 = Math.max(maxLevelAllowed8x8, g.getLevel() + 1 - 3);
+                                    }
                                 }
                             });
                     dlgAlert.setMessage("You won! Try this next level :)");
                 }
-            }
-            else {
+            } else {
                 dlgAlert.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -164,25 +169,23 @@ public class Level extends MainActivity {
         int level = g.getLevel();
         int size = g.getSize();
 
-        if (g.getLevel() < 4){
+        if (g.getLevel() < 4) {
             header.setText(size + "x" + size + "              Level " + level);
-        }
-        else {
+        } else {
             header.setText(size + "x" + size + "              Level " + (level - 3));
         }
     }
 
-    protected void retry(){
+    protected void retry() {
         g.restart();
         g.draw(mainImageView, getApplicationContext());
     }
 
-    private void back(int level){
+    private void back(int level) {
         if (level == 1) {
             super.onBackPressed();
-        }
-        else if (level == 4 && maxLevelAllowed7x7 < 3) {
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        } else if (level == 4 && maxLevelAllowed7x7 < 3) {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
             dlgAlert.setPositiveButton("OK",
@@ -193,8 +196,7 @@ public class Level extends MainActivity {
                     });
             dlgAlert.setMessage("You have to complete the 7x7 grid levels first!");
             dlgAlert.create().show();
-        }
-        else  {
+        } else {
             g = new Game(level - 1);
             g.draw(mainImageView, getApplicationContext());
         }
@@ -206,9 +208,8 @@ public class Level extends MainActivity {
                 || (g.getLevel() > 2 && g.getLevel() < 6 && ((g.getLevel() + 1) - 3) <= maxLevelAllowed8x8)) {
             g = new Game(g.getLevel() + 1);
             g.draw(mainImageView, getApplicationContext());
-        }
-        else if (g.getLevel() == 6) {
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        } else if (g.getLevel() == 6 && maxLevelAllowed8x8 == 4) {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
             dlgAlert.setPositiveButton("OK",
@@ -219,9 +220,8 @@ public class Level extends MainActivity {
                     });
             dlgAlert.setMessage("You completed the game, no more levels are available!");
             dlgAlert.create().show();
-        }
-        else {
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        } else {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
             dlgAlert.setPositiveButton("OK",

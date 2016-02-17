@@ -53,7 +53,7 @@ public class SecondaryActivity extends MainActivity {
 
         if ((grid && Level.maxLevelAllowed7x7 < level)
                 || (!grid && Level.maxLevelAllowed8x8 < level)) {
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("FlowFree");
             dlgAlert.setCancelable(true);
             dlgAlert.setPositiveButton("OK",
@@ -64,9 +64,7 @@ public class SecondaryActivity extends MainActivity {
                     });
             dlgAlert.setMessage("You have to complete the previous level first!");
             dlgAlert.create().show();
-        }
-
-        else {
+        } else {
             Intent intent = new Intent(SecondaryActivity.this, Level.class);
             intent.putExtra("level", l);
             startActivity(intent);

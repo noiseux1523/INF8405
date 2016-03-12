@@ -9,6 +9,13 @@
         <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-23.1.1_2d7d364c453382bdbee2ff5fd639402d2d5ff72c.jar" />
     </item>
     <item
+        jar="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.1.1_d3a8ddf19cb84e2d79e7c2c02a9ccd4d3790da38.jar" />
+    </item>
+    <item
         jar="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
@@ -23,11 +30,11 @@
         <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\support-annotations-23.1.1_8f14d35c0a8755c2c04357f4ba4a108358c9dfc9.jar" />
     </item>
     <item
-        jar="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jar="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
-        <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.1.1_d3a8ddf19cb84e2d79e7c2c02a9ccd4d3790da38.jar" />
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1_fbf370568ab284db918d92e5e158d593248f2a89.jar" />
     </item>
     <item
         jar="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\jars\classes.jar"
@@ -35,13 +42,6 @@
         revision="23.0.1"
         sha1="5c5699834e9722f1c288fea2de82725d078ba127">
         <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.1.1_5f56927529165b7e2a7109c55bb2649d81f16022.jar" />
-    </item>
-    <item
-        jar="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
-        <dex dex="C:\Users\cedric\Documents\INF8405\FlowFree\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1_fbf370568ab284db918d92e5e158d593248f2a89.jar" />
     </item>
 
 </items>

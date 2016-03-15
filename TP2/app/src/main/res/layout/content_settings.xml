@@ -41,7 +41,7 @@
         android:id="@+id/Photo"
         android:layout_below="@+id/title"
         android:layout_alignParentEnd="true"
-        android:background="#ffffff" />
+        android:background="#4cae2e" />
 
     <TextView
         android:layout_width="80dp"
@@ -61,10 +61,11 @@
         android:inputType="textEmailAddress|text"
         android:ems="10"
         android:id="@+id/Group"
+        android:hint="Name"
         android:textColor="#ffffff"
         android:textStyle="italic"
         android:textColorHighlight="#ffffff"
-        android:textColorHint="#ffffff"
+        android:textColorHint="#bdbdbd"
         android:textColorLink="#ffffff"
         android:singleLine="false"
         android:layout_above="@+id/Email"
@@ -89,10 +90,11 @@
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/Email"
+        android:hint="Adress"
         android:textColor="#ffffff"
         android:textStyle="italic"
         android:textColorHighlight="#ffffff"
-        android:textColorHint="#ffffff"
+        android:textColorHint="#bdbdbd"
         android:textColorLink="#ffffff"
         android:layout_centerVertical="true"
         android:layout_alignEnd="@+id/title" />

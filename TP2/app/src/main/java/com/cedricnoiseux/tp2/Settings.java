@@ -2,6 +2,8 @@ package com.cedricnoiseux.tp2;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -15,7 +17,11 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,15 +37,17 @@ import java.io.OutputStreamWriter;
 public class Settings extends AppCompatActivity {
     public final static String PROFILE = "profile.txt";
     private final static int SELECT_PHOTO = 20;
-
     private EditText Group;
     private EditText Email;
-
     private TextView Save;
     private TextView Return;
     private TextView ClickPicture;
-
     private ImageView Photo;
+    private CheckBox Organizer;
+    private String Path;
+    private String[] arraySpinner;
+    // https://trinitytuts.com/tips/multiselect-spinner-item-in-android/
+    private MultiSelectionSpinner Preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         Group = (EditText) findViewById(R.id.Group);
+
         Email = (EditText) findViewById(R.id.Email);
 
         Save = (TextView) findViewById(R.id.Save);
@@ -56,6 +65,15 @@ public class Settings extends AppCompatActivity {
                 saveClicked(v);
             }
         });
+
+        Return = (TextView) findViewById(R.id.Return);
+        Return.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMenu();
+            }
+        });
+
         ClickPicture = (TextView) findViewById(R.id.ClickPicture);
         ClickPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,17 +82,23 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        Preferences = (MultiSelectionSpinner) findViewById(R.id.Preferences);
+        this.arraySpinner = new String[] {"Restaurant", "Park", "Pizzeria", "Cafeteria", "Library",
+                                            "Appartment", "Office", "Class", "Computer Class", "Bar"};
+        Preferences.setItems(arraySpinner);
+
         Photo = (ImageView) findViewById(R.id.Photo);
 
-        if (!weHavePermissionToReadContacts()) {
+        Organizer = (CheckBox) findViewById(R.id.Organizer);
+
+        if (!weHavePermissionToReadGallery()) {
             requestReadGalleryPermissionFirst();
         }
         checkProfile();
         readFileInEditor();
-
     }
 
-    private boolean weHavePermissionToReadContacts() {
+    private boolean weHavePermissionToReadGallery() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -94,9 +118,7 @@ public class Settings extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 123
-                && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 123 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
@@ -121,22 +143,12 @@ public class Settings extends AppCompatActivity {
             Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+            Path = imagePath;
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
             Photo.setImageBitmap(bitmap);
-
-            try {
-                OutputStreamWriter out = new OutputStreamWriter(openFileOutput(PROFILE,0));
-                out.write(Group.getText().toString() + "\r\n");
-                out.write(Email.getText().toString() + "\r\n");
-                out.close();
-            }
-            catch (Throwable t) {
-                Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-            }
-
 
             cursor.close();
         }
@@ -144,9 +156,27 @@ public class Settings extends AppCompatActivity {
 
     public void saveClicked(View v){
         try {
+            if (Path != null) {
+            } else {
+                InputStream in = openFileInput(PROFILE);
+                if (in != null) {
+                    InputStreamReader tmp = new InputStreamReader(in);
+                    BufferedReader reader = new BufferedReader(tmp);
+                    String str = reader.readLine();
+                    Path = str;
+                }
+                in.close();
+            }
             OutputStreamWriter out = new OutputStreamWriter(openFileOutput(PROFILE,0));
+            out.write(Path + "\r\n");
             out.write(Group.getText().toString() + "\r\n");
             out.write(Email.getText().toString() + "\r\n");
+            if (Organizer.isChecked()) {
+                out.write("true" + "\r\n");
+            } else {
+                out.write("false" + "\r\n");
+            }
+            out.write(Preferences.getSelectedItemsAsString() + "\r\n");
             out.close();
             Toast.makeText(this, "The content is saved.", Toast.LENGTH_LONG).show();
         }
@@ -155,11 +185,44 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    public void goToMenu() {
+        if (getLines() == 5) {
+            Intent intent = new Intent(this, Menu.class);
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, "You must complete your profile before going to the menu.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public int getLines() {
+        int lines = 0;
+        try {
+            InputStream in = openFileInput(PROFILE);
+            InputStreamReader tmp = new InputStreamReader(in);
+            BufferedReader reader = new BufferedReader(tmp);
+            String str;
+            while ((str = reader.readLine()) != null) {
+                if (!str.equals("")) {
+                    lines++;
+                }
+            }
+            reader.close();
+        }
+        catch (java.io.FileNotFoundException e) {
+            // fichier par créé encore
+        }
+        catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+        return lines;
+    }
+
     private void checkProfile() {
         try {
             InputStream in = openFileInput(PROFILE);
-            if (in == null) {
-                Toast.makeText(this, "You have to complete your profile first.", Toast.LENGTH_LONG).show();
+            if (in == null || getLines() != 5) {
+                Toast.makeText(this, "You must complete your profile first.", Toast.LENGTH_LONG).show();
             }
             else {
                 readFileInEditor();
@@ -167,7 +230,7 @@ public class Settings extends AppCompatActivity {
         }
 
         catch (java.io.FileNotFoundException e) {
-            Toast.makeText(this, "You have to create your profile first.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "You must create your profile first.", Toast.LENGTH_LONG).show();
             // fichier par créé encore
         }
 
@@ -187,11 +250,28 @@ public class Settings extends AppCompatActivity {
                 while ((str = reader.readLine()) != null) {
                     switch (counter) {
                         case 0:
-                            Group.setText(str);
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                            Bitmap bitmap = BitmapFactory.decodeFile(str, options);
+                            Photo.setImageBitmap(bitmap);
                             break;
                         case 1:
+                            Group.setText(str);
+                            break;
+                        case 2:
                             Email.setText(str);
                             break;
+                        case 3:
+                            if (str.equals("true")) {
+                                Organizer.setChecked(true);
+                            } else {
+                                Organizer.setChecked(false);
+                            }
+                        case 4:
+                            String[] pref = str.split(", ");
+                            Preferences.setSelection(pref);
+                            Preferences.simple_adapter.clear();
+                            Preferences.simple_adapter.add(Preferences.buildSelectedItemString());
                         default:
                             break;
                     }
@@ -207,5 +287,4 @@ public class Settings extends AppCompatActivity {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
     }
-
 }

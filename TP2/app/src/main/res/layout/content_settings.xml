@@ -33,26 +33,27 @@
         android:hapticFeedbackEnabled="false"
         android:gravity="center"
         android:layout_below="@+id/title"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:id="@+id/Photo"
-        android:layout_below="@+id/title"
-        android:layout_alignParentEnd="true"
-        android:background="#4cae2e" />
+        android:background="#4cae2e"
+        android:layout_below="@+id/ClickPicture"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="80dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:textSize="18sp"
         android:text="Group Name"
         android:id="@+id/Group_text"
         android:textColor="#ffffff"
         android:layout_alignBottom="@+id/Group"
         android:layout_toStartOf="@+id/Group"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -73,7 +74,7 @@
 
     <TextView
         android:layout_width="80dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:textSize="18sp"
         android:text="Email"
         android:id="@+id/Email_text"
@@ -81,7 +82,8 @@
         android:layout_toStartOf="@+id/Email"
         android:layout_alignBottom="@+id/Email"
         android:layout_alignParentTop="false"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -98,6 +100,46 @@
         android:textColorLink="#ffffff"
         android:layout_centerVertical="true"
         android:layout_alignEnd="@+id/title" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:textSize="18sp"
+        android:text="Organizer"
+        android:id="@+id/Organizer_text"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/Email"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Check if true"
+        android:textColor="#ffffff"
+        android:id="@+id/Organizer"
+        android:layout_below="@+id/Email"
+        android:layout_toEndOf="@+id/Email_text"
+        android:enabled="true"
+        android:checked="false" />
+
+    <TextView
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:textSize="18sp"
+        android:text="Check Preferences"
+        android:id="@+id/Preferences_text"
+        android:textColor="#ffffff"
+        android:gravity="center_vertical"
+        android:layout_below="@+id/Organizer_text"
+        android:layout_alignParentStart="true" />
+
+    <com.cedricnoiseux.tp2.MultiSelectionSpinner
+        android:id="@+id/Preferences"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/Preferences_text"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"

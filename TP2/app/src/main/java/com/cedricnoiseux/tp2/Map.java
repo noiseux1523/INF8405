@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -19,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Map extends FragmentActivity implements
-        OnMapReadyCallback,
+        //OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -37,6 +39,7 @@ public class Map extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        isGooglePlayServicesAvailable();
         setUpMapIfNeeded();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -47,9 +50,9 @@ public class Map extends FragmentActivity implements
 
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1000); // 1 second, in milliseconds
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 //        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -57,8 +60,8 @@ public class Map extends FragmentActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         setUpMapIfNeeded();
         mGoogleApiClient.connect();
     }
@@ -67,9 +70,19 @@ public class Map extends FragmentActivity implements
     protected void onPause() {
         super.onPause();
 
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected() && mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
+        }
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
+            return false;
         }
     }
 
@@ -77,8 +90,7 @@ public class Map extends FragmentActivity implements
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -99,27 +111,17 @@ public class Map extends FragmentActivity implements
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        else {
-            handleNewLocation(location);
-        };
-    }
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//        mMap = googleMap;
+//    }
 
     private void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
+
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         MarkerOptions options = new MarkerOptions()
@@ -130,13 +132,20 @@ public class Map extends FragmentActivity implements
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
+    public void onConnected(Bundle bundle) {
+        if (mGoogleApiClient.isConnected() && mGoogleApiClient != null) {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (location == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            } else {
+                handleNewLocation(location);
+            }
+        }
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        handleNewLocation(location);
+    public void onConnectionSuspended(int i) {
+
     }
 
     @Override
@@ -151,5 +160,10 @@ public class Map extends FragmentActivity implements
         } else {
             Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        handleNewLocation(location);
     }
 }

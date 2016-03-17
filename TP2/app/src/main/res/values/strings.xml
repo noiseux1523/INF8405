@@ -5,4 +5,17 @@
     <string name="title_activity_menu">Menu</string>
     <string name="title_activity_google_map">GoogleMap</string>
     <string name="title_activity_map">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="latitude_label">Latitude</string>
+    <string name="longitude_label">Longitude</string>
+    <string name="Cancel">Cancel</string>
+    <string name="gps_network_not_enabled">
+        GPS not enabled
+    </string>
+    <string name="open_location_settings">
+        Open location settings
+    </string>
+    <string name="no_location_detected">
+        No location detected. Make sure location is enabled on the device.
+    </string>
 </resources>

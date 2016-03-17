@@ -38,12 +38,24 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:text="RECOMMEND"
-        android:id="@+id/button"
+        android:id="@+id/Recommend"
         android:background="@drawable/button"
         android:textColor="#ffffff"
         android:textSize="22dp"
         android:textStyle="bold"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:text="MAP"
+        android:id="@+id/Map"
+        android:background="@drawable/button"
+        android:textColor="#ffffff"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

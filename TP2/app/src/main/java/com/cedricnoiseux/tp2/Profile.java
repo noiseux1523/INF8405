@@ -34,9 +34,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class Settings extends AppCompatActivity {
+public class Profile extends AppCompatActivity {
     public final static String PROFILE = "profile.txt";
-    private final static int SELECT_PHOTO = 20;
+    public static Boolean PROFILE_COMPLETED = false;
+    public final static int SELECT_PHOTO = 20;
+
     private EditText Group;
     private EditText Email;
     private TextView Save;
@@ -84,37 +86,76 @@ public class Settings extends AppCompatActivity {
 
         Preferences = (MultiSelectionSpinner) findViewById(R.id.Preferences);
         this.arraySpinner = new String[] {"Restaurant", "Park", "Pizzeria", "Cafeteria", "Library",
-                                            "Appartment", "Office", "Class", "Computer Class", "Bar"};
+                                          "Appartment", "Office", "Class", "Computer Class", "Bar"};
         Preferences.setItems(arraySpinner);
 
         Photo = (ImageView) findViewById(R.id.Photo);
 
         Organizer = (CheckBox) findViewById(R.id.Organizer);
 
-        if (!weHavePermissionToReadGallery()) {
-            requestReadGalleryPermissionFirst();
-        }
+        // Check gallery permissions
+//        if (!weHavePermissionToReadGallery()) {
+//            requestReadGalleryPermissionFirst();
+//        }
+
+        // Check gallery permissions
+        requestForGalleryPermission();
+        requestForLocationPermissionFine();
+        requestForLocationPermissionCoarse();
+
+        // Check profile completeness
         checkProfile();
-        readFileInEditor();
     }
 
-    private boolean weHavePermissionToReadGallery() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    public void requestForLocationPermissionFine() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
     }
 
-    private void requestReadGalleryPermissionFirst() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "We need permission to access pictures.", Toast.LENGTH_LONG).show();
-            requestForResultGalleryPermission();
-        } else {
-            requestForResultGalleryPermission();
+    public void requestForLocationPermissionCoarse() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 123);
+    }
+
+    public void requestForGalleryPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
         }
     }
 
-    private void requestForResultGalleryPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-    }
+//    /**
+//     * Check external storage to find if permission allowed
+//     * @return permission true or false
+//     */
+//    private boolean weHavePermissionToReadGallery() {
+//        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+//    }
+//
+//    /**
+//     * Show request to allow permission to gallery
+//     */
+//    private void requestReadGalleryPermissionFirst() {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//            Toast.makeText(this, "We need permission to access pictures.", Toast.LENGTH_LONG).show();
+//            requestForResultGalleryPermission();
+//        } else {
+//            requestForResultGalleryPermission();
+//        }
+//    }
+//
+//    /**
+//     * Method to allow permission to gallery
+//     */
+//    private void requestForResultGalleryPermission() {
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+//    }
 
+    /**
+     * Show message to notify if permission granted or not
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -125,12 +166,22 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gives access to photo gallery
+     * @param v
+     */
     public void browsePicture(View v) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, SELECT_PHOTO);
     }
 
+    /**
+     * Method to select and show picture to user
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -154,6 +205,10 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to save the profile information
+     * @param v
+     */
     public void saveClicked(View v){
         try {
             if (Path != null) {
@@ -185,6 +240,9 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to go to the Menu window
+     */
     public void goToMenu() {
         if (getLines() == 5) {
             Intent intent = new Intent(this, Menu.class);
@@ -195,6 +253,10 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to give the number of lines in a text file
+     * @return number of lines
+     */
     public int getLines() {
         int lines = 0;
         try {
@@ -218,7 +280,10 @@ public class Settings extends AppCompatActivity {
         return lines;
     }
 
-    private void checkProfile() {
+    /**
+     * Method to verify if the profile is complete or not
+     */
+    public void checkProfile() {
         try {
             InputStream in = openFileInput(PROFILE);
             if (in == null || getLines() != 5) {
@@ -226,6 +291,10 @@ public class Settings extends AppCompatActivity {
             }
             else {
                 readFileInEditor();
+                if (!PROFILE_COMPLETED){
+                    PROFILE_COMPLETED = true;
+                    goToMenu();
+                }
             }
         }
 
@@ -239,6 +308,9 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to fill the user profile if already created
+     */
     public void readFileInEditor() {
         try {
             InputStream in = openFileInput(PROFILE);

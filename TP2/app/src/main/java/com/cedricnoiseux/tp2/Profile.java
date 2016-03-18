@@ -34,6 +34,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
+@RuntimePermissions
 public class Profile extends AppCompatActivity {
     public final static String PROFILE = "profile.txt";
     public static Boolean PROFILE_COMPLETED = false;
@@ -48,7 +52,6 @@ public class Profile extends AppCompatActivity {
     private CheckBox Organizer;
     private String Path;
     private String[] arraySpinner;
-    // https://trinitytuts.com/tips/multiselect-spinner-item-in-android/
     private MultiSelectionSpinner Preferences;
 
     @Override
@@ -57,9 +60,7 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         Group = (EditText) findViewById(R.id.Group);
-
         Email = (EditText) findViewById(R.id.Email);
-
         Save = (TextView) findViewById(R.id.Save);
         Save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +68,6 @@ public class Profile extends AppCompatActivity {
                 saveClicked(v);
             }
         });
-
         Return = (TextView) findViewById(R.id.Return);
         Return.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +75,6 @@ public class Profile extends AppCompatActivity {
                 goToMenu();
             }
         });
-
         ClickPicture = (TextView) findViewById(R.id.ClickPicture);
         ClickPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,26 +82,19 @@ public class Profile extends AppCompatActivity {
                 browsePicture(v);
             }
         });
-
         Preferences = (MultiSelectionSpinner) findViewById(R.id.Preferences);
         this.arraySpinner = new String[] {"Restaurant", "Park", "Pizzeria", "Cafeteria", "Library",
                                           "Appartment", "Office", "Class", "Computer Class", "Bar"};
         Preferences.setItems(arraySpinner);
-
         Photo = (ImageView) findViewById(R.id.Photo);
-
         Organizer = (CheckBox) findViewById(R.id.Organizer);
-
-        // Check gallery permissions
-//        if (!weHavePermissionToReadGallery()) {
-//            requestReadGalleryPermissionFirst();
-//        }
 
         // Check gallery permissions
         requestForGalleryPermission();
         requestForLocationPermissionFine();
         requestForLocationPermissionCoarse();
         requestForCalendarPermission();
+        requestForInternetPermission();
 
         // Check profile completeness
         checkProfile();
@@ -128,32 +120,10 @@ public class Profile extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, 123);
     }
 
-//    /**
-//     * Check external storage to find if permission allowed
-//     * @return permission true or false
-//     */
-//    private boolean weHavePermissionToReadGallery() {
-//        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-//    }
-//
-//    /**
-//     * Show request to allow permission to gallery
-//     */
-//    private void requestReadGalleryPermissionFirst() {
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//            Toast.makeText(this, "We need permission to access pictures.", Toast.LENGTH_LONG).show();
-//            requestForResultGalleryPermission();
-//        } else {
-//            requestForResultGalleryPermission();
-//        }
-//    }
-//
-//    /**
-//     * Method to allow permission to gallery
-//     */
-//    private void requestForResultGalleryPermission() {
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-//    }
+    public void requestForInternetPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 123);
+    }
 
     /**
      * Show message to notify if permission granted or not
@@ -164,17 +134,21 @@ public class Profile extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 123 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-        }
+        ProfilePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == 123 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     /**
      * Gives access to photo gallery
      * @param v
      */
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE})
     public void browsePicture(View v) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -296,7 +270,7 @@ public class Profile extends AppCompatActivity {
             }
             else {
                 readFileInEditor();
-                if (!PROFILE_COMPLETED){
+                if (!PROFILE_COMPLETED) {
                     PROFILE_COMPLETED = true;
                     goToMenu();
                 }

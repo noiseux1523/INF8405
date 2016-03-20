@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 
 public class Menu extends AppCompatActivity {
-    public final static String PROFILE = "profile.txt";
     private Button Profile;
     private Button Recommend;
     private Button Map;

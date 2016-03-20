@@ -1,14 +1,15 @@
 <resources>
-    <string name="app_name">TP2</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="app_name">Organisapp</string>
+    <string name="action_settings">Profile</string>
+    <string name="title_activity_settings">Profile</string>
     <string name="title_activity_menu">Menu</string>
     <string name="title_activity_google_map">GoogleMap</string>
     <string name="title_activity_map">Map</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Maps</string>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>
     <string name="Cancel">Cancel</string>
+    <string name="PROFILE">profile.txt</string>
     <string name="gps_network_not_enabled">
         GPS not enabled
     </string>

@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import permissions.dispatcher.NeedsPermission;
@@ -39,7 +40,6 @@ import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
 public class Profile extends AppCompatActivity {
-    public final static String PROFILE = "profile.txt";
     public static Boolean PROFILE_COMPLETED = false;
     public final static int SELECT_PHOTO = 20;
 
@@ -51,6 +51,7 @@ public class Profile extends AppCompatActivity {
     private ImageView Photo;
     private CheckBox Organizer;
     private String Path;
+    private static String Position = "0 0";
     private String[] arraySpinner;
     private MultiSelectionSpinner Preferences;
 
@@ -65,7 +66,7 @@ public class Profile extends AppCompatActivity {
         Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveClicked(v);
+                saveClicked();
             }
         });
         Return = (TextView) findViewById(R.id.Return);
@@ -79,7 +80,7 @@ public class Profile extends AppCompatActivity {
         ClickPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                browsePicture(v);
+                browsePicture();
             }
         });
         Preferences = (MultiSelectionSpinner) findViewById(R.id.Preferences);
@@ -90,37 +91,21 @@ public class Profile extends AppCompatActivity {
         Organizer = (CheckBox) findViewById(R.id.Organizer);
 
         // Check gallery permissions
-        requestForGalleryPermission();
-        requestForLocationPermissionFine();
-        requestForLocationPermissionCoarse();
-        requestForCalendarPermission();
-        requestForInternetPermission();
+        requestPermissions();
 
         // Check profile completeness
         checkProfile();
     }
 
-    public void requestForLocationPermissionFine() {
+    public void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-    }
-
-    public void requestForLocationPermissionCoarse() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 123);
-    }
-
-    public void requestForGalleryPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-    }
-
-    public void requestForCalendarPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, 123);
-    }
-
-    public void requestForInternetPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 123);
     }
@@ -135,21 +120,13 @@ public class Profile extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         ProfilePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == 123 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     /**
      * Gives access to photo gallery
-     * @param v
      */
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE})
-    public void browsePicture(View v) {
+    public void browsePicture() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -186,22 +163,35 @@ public class Profile extends AppCompatActivity {
 
     /**
      * Method to save the profile information
-     * @param v
      */
-    public void saveClicked(View v){
+    public void saveClicked(){
         try {
-            if (Path != null) {
-            } else {
-                InputStream in = openFileInput(PROFILE);
-                if (in != null) {
-                    InputStreamReader tmp = new InputStreamReader(in);
-                    BufferedReader reader = new BufferedReader(tmp);
-                    String str = reader.readLine();
-                    Path = str;
+            OutputStream outTest = openFileOutput(String.valueOf(R.string.PROFILE),0);
+            outTest.close();
+            InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
+            if (in != null) {
+                InputStreamReader tmp = new InputStreamReader(in);
+                BufferedReader reader = new BufferedReader(tmp);
+                String str;
+                int counter = 0;
+                while ((str = reader.readLine()) != null) {
+                    switch (counter) {
+                        case 0:
+                            if (Path == null)
+                                Path = str;
+                            break;
+                        case 5:
+                            if (!Position.equals("0 0"))
+                                Position = str;
+                            break;
+                        default:
+                            break;
+                    }
+                    counter++;
                 }
-                in.close();
             }
-            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(PROFILE,0));
+            in.close();
+            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE),0));
             out.write(Path + "\r\n");
             out.write(Group.getText().toString() + "\r\n");
             out.write(Email.getText().toString() + "\r\n");
@@ -211,8 +201,12 @@ public class Profile extends AppCompatActivity {
                 out.write("false" + "\r\n");
             }
             out.write(Preferences.getSelectedItemsAsString() + "\r\n");
+            out.write(Position + "\r\n");
             out.close();
             Toast.makeText(this, "The content is saved.", Toast.LENGTH_LONG).show();
+        }
+        catch (java.io.FileNotFoundException e) {
+            // fichier par créé encore
         }
         catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
@@ -223,9 +217,23 @@ public class Profile extends AppCompatActivity {
      * Method to go to the Menu window
      */
     public void goToMenu() {
-        if (getLines() == 5) {
+        if (getLines() >= 5 && !Position.equals("0 0")) { // & on a une position initiale
             Intent intent = new Intent(this, Menu.class);
             startActivity(intent);
+        }
+        else if (Position.equals("0 0")) { // on a pas de position initiale
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.setTitle("Organisapp");
+            dlgAlert.setCancelable(true);
+                    dlgAlert.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+            dlgAlert.setMessage("We need your location to continue");
+            dlgAlert.create().show();
         }
         else {
             Toast.makeText(this, "You must complete your profile before going to the menu.", Toast.LENGTH_LONG).show();
@@ -239,7 +247,7 @@ public class Profile extends AppCompatActivity {
     public int getLines() {
         int lines = 0;
         try {
-            InputStream in = openFileInput(PROFILE);
+            InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             InputStreamReader tmp = new InputStreamReader(in);
             BufferedReader reader = new BufferedReader(tmp);
             String str;
@@ -264,8 +272,8 @@ public class Profile extends AppCompatActivity {
      */
     public void checkProfile() {
         try {
-            InputStream in = openFileInput(PROFILE);
-            if (in == null || getLines() != 5) {
+            InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
+            if (in == null || getLines() < 5) {
                 Toast.makeText(this, "You must complete your profile first.", Toast.LENGTH_LONG).show();
             }
             else {
@@ -275,6 +283,7 @@ public class Profile extends AppCompatActivity {
                     goToMenu();
                 }
             }
+            in.close();
         }
 
         catch (java.io.FileNotFoundException e) {
@@ -292,7 +301,7 @@ public class Profile extends AppCompatActivity {
      */
     public void readFileInEditor() {
         try {
-            InputStream in = openFileInput(PROFILE);
+            InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             if (in != null) {
                 InputStreamReader tmp = new InputStreamReader(in);
                 BufferedReader reader = new BufferedReader(tmp);
@@ -323,6 +332,8 @@ public class Profile extends AppCompatActivity {
                             Preferences.setSelection(pref);
                             Preferences.simple_adapter.clear();
                             Preferences.simple_adapter.add(Preferences.buildSelectedItemString());
+                        case 5:
+                            Position = str;
                         default:
                             break;
                     }

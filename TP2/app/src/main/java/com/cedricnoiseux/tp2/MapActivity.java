@@ -27,6 +27,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -36,6 +48,7 @@ public class MapActivity extends AppCompatActivity implements
 		GoogleApiClient.OnConnectionFailedListener,
 		LocationListener {
 
+	public static boolean initialLocation = false;
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
 	private GoogleApiClient mGoogleApiClient;
@@ -48,7 +61,6 @@ public class MapActivity extends AppCompatActivity implements
 	 * returned in Activity.onActivityResult
 	 */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-	public final static String PROFILE = "profile.txt";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +198,42 @@ public class MapActivity extends AppCompatActivity implements
 			Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
 			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
+			if (!initialLocation) {
+				try {
+					InputStreamReader tmp = new InputStreamReader(openFileInput(String.valueOf(R.string.PROFILE)));
+					BufferedReader reader = new BufferedReader(tmp);
+					OutputStreamWriter writer = new OutputStreamWriter(openFileOutput("tempFile", 0));
+					String currentLine;
+					int counter = 0;
+					while((currentLine = reader.readLine()) != null) {
+						if (counter == 5) {
+							writer.write(String.valueOf(latLng.longitude) + " " + String.valueOf(latLng.latitude) + "\r\n");
+						} else {
+							writer.write(currentLine + "\r\n");
+						}
+						counter++;
+					}
+					writer.close();
+					reader.close();
+
+					InputStreamReader tmp1 = new InputStreamReader(openFileInput("tempFile"));
+					BufferedReader reader1 = new BufferedReader(tmp1);
+					OutputStreamWriter writer1 = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE), 0));
+					String currentLine1;
+					while((currentLine1 = reader1.readLine()) != null) {
+						writer1.write(currentLine1 + "\r\n");
+					}
+					writer1.close();
+					reader1.close();
+
+					initialLocation = true;
+					Intent intent = new Intent(this, Menu.class);
+					startActivity(intent);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
 			MarkerOptions options = new MarkerOptions()
 					.position(latLng)
 					.title("I am here!");
@@ -212,9 +260,39 @@ public class MapActivity extends AppCompatActivity implements
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
+		LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+		try {
+			InputStreamReader tmp = new InputStreamReader(openFileInput(String.valueOf(R.string.PROFILE)));
+			BufferedReader reader = new BufferedReader(tmp);
+			OutputStreamWriter writer = new OutputStreamWriter(openFileOutput("tempFile", 0));
+			String currentLine;
+			int counter = 0;
+			while((currentLine = reader.readLine()) != null) {
+				if (counter == 5) {
+					writer.write(String.valueOf(latLng.longitude) + " " + String.valueOf(latLng.latitude) + "\r\n");
+				} else {
+					writer.write(currentLine + "\r\n");
+				}
+				counter++;
+			}
+			writer.close();
+			reader.close();
+
+			InputStreamReader tmp1 = new InputStreamReader(openFileInput("tempFile"));
+			BufferedReader reader1 = new BufferedReader(tmp1);
+			OutputStreamWriter writer1 = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE), 0));
+			String currentLine1;
+			while((currentLine1 = reader1.readLine()) != null) {
+				writer1.write(currentLine1 + "\r\n");
+			}
+			writer1.close();
+			reader1.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		map.clear();
-		LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 		MarkerOptions options = new MarkerOptions()
 				.position(latLng)
 				.title("I am here!");

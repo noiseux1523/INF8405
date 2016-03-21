@@ -16,6 +16,7 @@ public class Group {
     public static Group getGroup(String name) {
         if (allGroups_ == null) {
             //todo : aller les chercher dans la base de donnees
+            
         }
         for (Group g : allGroups_) {
             if (g.name_ == name) {

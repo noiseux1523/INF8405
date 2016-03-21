@@ -19,12 +19,12 @@
         android:id="@+id/title"
         android:src="@drawable/title"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="false"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:textSize="18sp"
         android:text="Click to select a picture"
         android:id="@+id/ClickPicture"
@@ -156,8 +156,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text="RETURN"
-        android:id="@+id/Return"
+        android:text="MENU"
+        android:id="@+id/Menu"
         android:textColor="#ffffff"
         android:textStyle="bold"
         android:layout_alignParentBottom="true"

@@ -19,13 +19,13 @@
         android:id="@+id/title"
         android:src="@drawable/title"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="false"
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:text="MY PROFILE"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:text="PROFILE"
         android:id="@+id/Profile"
         android:background="@drawable/button"
         android:textColor="#ffffff"
@@ -35,8 +35,8 @@
         android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:text="RECOMMEND"
         android:id="@+id/Recommend"
         android:background="@drawable/button"
@@ -47,15 +47,27 @@
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:text="MAP"
         android:id="@+id/Map"
         android:background="@drawable/button"
         android:textColor="#ffffff"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/Profile"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:text="CALENDAR"
+        android:id="@+id/Calendar"
+        android:background="@drawable/button"
+        android:textColor="#ffffff"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        android:layout_above="@+id/Profile"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

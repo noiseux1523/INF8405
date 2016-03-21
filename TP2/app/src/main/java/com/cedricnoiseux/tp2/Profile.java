@@ -30,6 +30,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -50,8 +51,11 @@ public class Profile extends AppCompatActivity {
     private TextView ClickPicture;
     private ImageView Photo;
     private CheckBox Organizer;
-    private String Path;
-    private static String Position = "0 0";
+    private String Path = "0";
+                                                //////////////////////////////////////
+    private static String Position = "-123 65"; // NE PAS OUBLIER DE RECHANGER À "0 0"
+                                                //////////////////////////////////////
+    private static String Calendar = "0";
     private String[] arraySpinner;
     private MultiSelectionSpinner Preferences;
 
@@ -69,7 +73,7 @@ public class Profile extends AppCompatActivity {
                 saveClicked();
             }
         });
-        Return = (TextView) findViewById(R.id.Return);
+        Return = (TextView) findViewById(R.id.Menu);
         Return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +97,8 @@ public class Profile extends AppCompatActivity {
         // Check gallery permissions
         requestPermissions();
 
+        // Update Position and Calendar
+
         // Check profile completeness
         checkProfile();
     }
@@ -100,14 +106,25 @@ public class Profile extends AppCompatActivity {
     public void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 123);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, 123);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 123);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, 123);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 123);
+
     }
 
     /**
@@ -120,6 +137,11 @@ public class Profile extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         ProfilePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        if (requestCode == 123 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -164,10 +186,8 @@ public class Profile extends AppCompatActivity {
     /**
      * Method to save the profile information
      */
-    public void saveClicked(){
+    public void saveClicked() {
         try {
-            OutputStream outTest = openFileOutput(String.valueOf(R.string.PROFILE),0);
-            outTest.close();
             InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             if (in != null) {
                 InputStreamReader tmp = new InputStreamReader(in);
@@ -177,12 +197,16 @@ public class Profile extends AppCompatActivity {
                 while ((str = reader.readLine()) != null) {
                     switch (counter) {
                         case 0:
-                            if (Path == null)
+                            if (Path.equals("0"))
                                 Path = str;
                             break;
                         case 5:
                             if (!Position.equals("0 0"))
                                 Position = str;
+                            break;
+                        case 6:
+                            if(!Calendar.equals("0"))
+                                Calendar = str;
                             break;
                         default:
                             break;
@@ -202,11 +226,21 @@ public class Profile extends AppCompatActivity {
             }
             out.write(Preferences.getSelectedItemsAsString() + "\r\n");
             out.write(Position + "\r\n");
+            out.write(Calendar + "\r\n");
             out.close();
             Toast.makeText(this, "The content is saved.", Toast.LENGTH_LONG).show();
         }
         catch (java.io.FileNotFoundException e) {
             // fichier par créé encore
+            try {
+                OutputStreamWriter out = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE),0));
+                out.close();
+                saveClicked();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
@@ -217,11 +251,12 @@ public class Profile extends AppCompatActivity {
      * Method to go to the Menu window
      */
     public void goToMenu() {
-        if (getLines() >= 5 && !Position.equals("0 0")) { // & on a une position initiale
+        if (getLines() >= 5 && !Position.equals("0 0") && !Calendar.equals("0") && PROFILE_COMPLETED) { // & on a une position initiale
             Intent intent = new Intent(this, Menu.class);
             startActivity(intent);
         }
-        else if (Position.equals("0 0")) { // on a pas de position initiale
+        else if (getLines() >= 5 && (Position.equals("0 0") || Calendar.equals("0") || !PROFILE_COMPLETED)) { // on a pas de position initiale ou de calendrier
+            PROFILE_COMPLETED = true;
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("Organisapp");
             dlgAlert.setCancelable(true);
@@ -279,7 +314,6 @@ public class Profile extends AppCompatActivity {
             else {
                 readFileInEditor();
                 if (!PROFILE_COMPLETED) {
-                    PROFILE_COMPLETED = true;
                     goToMenu();
                 }
             }
@@ -327,13 +361,19 @@ public class Profile extends AppCompatActivity {
                             } else {
                                 Organizer.setChecked(false);
                             }
+                            break;
                         case 4:
                             String[] pref = str.split(", ");
                             Preferences.setSelection(pref);
                             Preferences.simple_adapter.clear();
                             Preferences.simple_adapter.add(Preferences.buildSelectedItemString());
+                            break;
                         case 5:
                             Position = str;
+                            break;
+                        case 6:
+                            Calendar = str;
+                            break;
                         default:
                             break;
                     }

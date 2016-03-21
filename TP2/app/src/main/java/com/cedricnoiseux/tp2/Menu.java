@@ -10,6 +10,7 @@ public class Menu extends AppCompatActivity {
     private Button Profile;
     private Button Recommend;
     private Button Map;
+    private Button Calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,14 @@ public class Menu extends AppCompatActivity {
                 goToMap();
             }
         });
+
+        Calendar = (Button) findViewById(R.id.Calendar);
+        Calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCalendar();
+            }
+        });
     }
 
     /**
@@ -51,5 +60,12 @@ public class Menu extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Method to open Calendar
+     */
+    public void goToCalendar() {
+        Intent intent = new Intent(this, CalendarActivity.class);
+        startActivity(intent);
+    }
 
 }

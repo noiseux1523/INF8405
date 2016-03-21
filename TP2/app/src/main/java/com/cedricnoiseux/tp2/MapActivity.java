@@ -2,7 +2,9 @@ package com.cedricnoiseux.tp2;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
@@ -197,7 +199,6 @@ public class MapActivity extends AppCompatActivity implements
 		if (location != null) {
 			Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
 			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
 			if (!initialLocation) {
 				try {
 					InputStreamReader tmp = new InputStreamReader(openFileInput(String.valueOf(R.string.PROFILE)));
@@ -226,23 +227,37 @@ public class MapActivity extends AppCompatActivity implements
 					writer1.close();
 					reader1.close();
 
-					initialLocation = true;
-					Intent intent = new Intent(this, Menu.class);
-					startActivity(intent);
+					AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+					dlgAlert.setTitle("Organisapp");
+					dlgAlert.setCancelable(true);
+					dlgAlert.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+									startActivity(intent);
+								}
+							});
+					dlgAlert.setMessage("We need your to access your calendar to continue");
+					dlgAlert.create().show();
+
+//					Intent intent = new Intent(this, Menu.class);
+//					startActivity(intent);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
+			if (initialLocation){
+				MarkerOptions options = new MarkerOptions()
+						.position(latLng)
+						.title("I am here!");
+				map.addMarker(options);
 
-			MarkerOptions options = new MarkerOptions()
-					.position(latLng)
-					.title("I am here!");
-        	map.addMarker(options);
-
-			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-			map.animateCamera(cameraUpdate);
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+				map.animateCamera(cameraUpdate);
+			}
+			initialLocation = true;
         } else {
-			Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+        	Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
 		}
 		startLocationUpdates();
 	}

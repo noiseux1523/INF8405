@@ -16,14 +16,12 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Event;
 
 import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -295,7 +293,7 @@ public class CalendarActivity extends AppCompatActivity {
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
-            List<Event> items = events.getItems();
+            List<com.google.api.services.calendar.model.Event> items = events.getItems();
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();

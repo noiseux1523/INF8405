@@ -22,52 +22,96 @@
         android:layout_alignParentStart="false"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:text="PROFILE"
-        android:id="@+id/Profile"
-        android:background="@drawable/button"
-        android:textColor="#ffffff"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_marginTop="5dp">
 
-    <Button
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:text="RECOMMEND"
-        android:id="@+id/Recommend"
-        android:background="@drawable/button"
-        android:textColor="#ffffff"
-        android:textSize="22dp"
-        android:textStyle="bold"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:text="CALENDAR"
+            android:id="@+id/Calendar"
+            android:background="@drawable/button"
+            android:textColor="#ffffff"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_gravity="top|left"
+            android:layout_marginRight="2dp" />
 
-    <Button
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:text="MAP"
-        android:id="@+id/Map"
-        android:background="@drawable/button"
-        android:textColor="#ffffff"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:layout_below="@+id/Profile"
-        android:layout_centerHorizontal="true" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:text="MAP"
+            android:id="@+id/Map"
+            android:background="@drawable/button"
+            android:textColor="#ffffff"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_gravity="top|right"
+            android:layout_marginLeft="2dp" />
+    </LinearLayout>
 
-    <Button
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:text="CALENDAR"
-        android:id="@+id/Calendar"
-        android:background="@drawable/button"
-        android:textColor="#ffffff"
-        android:textSize="26dp"
-        android:textStyle="bold"
-        android:layout_above="@+id/Profile"
-        android:layout_centerHorizontal="true" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="5dp">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="140dp"
+            android:text="PROFILE"
+            android:id="@+id/Profile"
+            android:background="@drawable/button"
+            android:textColor="#ffffff"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title"
+        android:id="@+id/linearLayout"
+        android:layout_marginTop="5dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:text="RECOMMEND"
+            android:id="@+id/Recommend"
+            android:background="@drawable/button"
+            android:textColor="#ffffff"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_gravity="left|bottom"
+            android:layout_weight="1"
+            android:layout_marginRight="2dp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:text="MEETING"
+            android:id="@+id/Meeting"
+            android:background="@drawable/button"
+            android:textColor="#ffffff"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_gravity="bottom|right"
+            android:layout_weight="1"
+            android:layout_marginRight="2dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

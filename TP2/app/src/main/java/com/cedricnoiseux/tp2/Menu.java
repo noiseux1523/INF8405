@@ -9,6 +9,7 @@ import android.widget.Button;
 public class Menu extends AppCompatActivity {
     private Button Profile;
     private Button Recommend;
+    private Button Meeting;
     private Button Map;
     private Button Calendar;
 
@@ -42,6 +43,8 @@ public class Menu extends AppCompatActivity {
                 goToCalendar();
             }
         });
+
+        Meeting = (Button) findViewById(R.id.Meeting);
     }
 
     /**

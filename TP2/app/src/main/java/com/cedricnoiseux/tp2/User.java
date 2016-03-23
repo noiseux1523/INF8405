@@ -1,5 +1,8 @@
 package com.cedricnoiseux.tp2;
 
+import android.graphics.Point;
+import android.graphics.PointF;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -95,5 +98,25 @@ public class User {
         }
 
 
+    private static List<User> getUsersFromGroup(String name) {
+        List<User> ret = new ArrayList<User>();
+        Group search = Group.getGroup(name);
+        for (User u : allUsers_) {
+            if (u.group_ == search) {
+                ret.add(u);
+            }
+        }
+        return ret;
+    }
 
+    public static PointF getAveragePosition(String groupName) {
+        List<User> members = getUsersFromGroup(groupName);
+        float sumX,sumY;
+        sumX = sumY = 0;
+        for (User member : members) {
+            sumX += member.lastLocationX_;
+            sumY += member.lastLocationY_;
+        }
+        return (new PointF(sumX / members.size(), sumY / members.size()));
+    }
 }

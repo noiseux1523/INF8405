@@ -53,18 +53,18 @@ public class MultiSelectionSpinner extends Spinner implements
                     "Argument 'which' is out of bounds.");
         }
 
-//        try {
-//            ArrayList<String> a = new ArrayList<String>();
-//            a.add("Restaurant");
-//            a.add("Library");
-//            a.add("Cafeteria");
-//            User u = User.getUser("clementgamache@gmail.com", "inexistant", false, a, 50, 20);
-//            System.out.println(u.toString());
-//
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            ArrayList<String> a = new ArrayList<String>();
+            a.add("Restaurant");
+            a.add("Library");
+            a.add("Cafeteria");
+            User u = User.getUser("tamere@gmail.com", "inexistant", false, a, 50, 20);
+            System.out.println(u.toString());
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

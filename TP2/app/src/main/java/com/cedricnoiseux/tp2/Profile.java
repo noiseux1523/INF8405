@@ -102,6 +102,8 @@ public class Profile extends AppCompatActivity {
 
         // Check profile completeness
         checkProfile();
+
+
     }
 
     /**

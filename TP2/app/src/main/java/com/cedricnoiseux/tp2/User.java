@@ -1,9 +1,14 @@
 package com.cedricnoiseux.tp2;
 
+import android.graphics.Point;
+import android.graphics.PointF;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by User on 2016-03-21.
@@ -97,4 +102,60 @@ public class User {
         }
             return ret;
         }
+<<<<<<< HEAD
+=======
+
+
+    private static List<User> getUsersFromGroup(String name) {
+        List<User> ret = new ArrayList<User>();
+        Group search = Group.getGroup(name);
+        for (User u : allUsers_) {
+            if (u.group_ == search) {
+                ret.add(u);
+            }
+        }
+        return ret;
+    }
+
+    public static PointF getAveragePosition(String groupName) {
+        List<User> members = getUsersFromGroup(groupName);
+        float sumX,sumY;
+        sumX = sumY = 0;
+        for (User member : members) {
+            sumX += member.lastLocationX_;
+            sumY += member.lastLocationY_;
+        }
+        return (new PointF(sumX / members.size(), sumY / members.size()));
+    }
+
+    public static List<ActivityType> getCommonInterests(String groupName) {
+        List<User> members = getUsersFromGroup(groupName);
+        Set<ActivityType> setActivities = new HashSet<ActivityType>();
+        for (User u : members) {
+            setActivities.addAll(u.preferences_);
+        }
+        List<ActivityType> activities = new ArrayList<ActivityType>();
+        activities.addAll(setActivities);
+        int[] qtys = new int[activities.size()];
+        for (User u : members) {
+            for (int i = 0 ; i < activities.size() ; i++) {
+                if (u.preferences_.contains(activities.get(i))) {
+                    qtys[i]++;
+                }
+            }
+        }
+        List<ActivityType> ret = new ArrayList<ActivityType>();
+        int idMax = 0;
+        for (int j = 0 ; j < 3 ; j++) {
+            for (int i = 0 ; i < qtys.length ; i++) {
+                if (qtys[i] > qtys[idMax]) {
+                    idMax = i;
+                }
+            }
+            ret.add(activities.get(idMax));
+            qtys[idMax] = -99;
+        }
+        return ret;
+    }
+>>>>>>> 3f428fc04a145e9ec955fbc15d88c71bce42c9f5
 }

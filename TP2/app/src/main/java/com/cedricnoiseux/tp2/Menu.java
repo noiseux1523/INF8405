@@ -1,10 +1,15 @@
 package com.cedricnoiseux.tp2;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Menu extends AppCompatActivity {
     private Button Profile;
@@ -12,6 +17,11 @@ public class Menu extends AppCompatActivity {
     private Button Meeting;
     private Button Map;
     private Button Calendar;
+
+    private String batteryLevelIni_;
+    private String batteryLevelFinal_;
+    //private TextView batteryLevelIni;
+    //private TextView batteryLevelFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +61,32 @@ public class Menu extends AppCompatActivity {
         });
 
         Meeting = (Button) findViewById(R.id.Meeting);
+
+        //batteryLevelIni = (TextView)findViewById(R.id.batterylevelini);
+        //batteryLevelFinal = (TextView)findViewById(R.id.batterylevelfinal);
+
+        this.registerReceiver(this.myBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
+
+    /**
+     * Method to evaluate battery
+     */
+    private BroadcastReceiver myBatteryReceiver = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            if (arg1.getAction().equals(Intent.ACTION_BATTERY_CHANGED)){
+                if (batteryLevelIni_ == null && batteryLevelFinal_ == null) {
+                    batteryLevelFinal_ = "Level: " + String.valueOf(arg1.getIntExtra("level", 0)) + "%";
+                    batteryLevelIni_ = batteryLevelFinal_;
+                } else {
+                    batteryLevelIni_ = batteryLevelFinal_;
+                    batteryLevelFinal_ = "Level: " + String.valueOf(arg1.getIntExtra("level", 0)) + "%";
+                }
+                //batteryLevelIni.setText(batteryLevelIni_);
+                //batteryLevelFinal.setText(batteryLevelFinal_);
+            }
+        }
+    };
 
     /**
      * Method to open Profile activity

@@ -12,8 +12,12 @@ import android.widget.TextView;
 
 public class BatteryActivity extends AppCompatActivity {
 
-    private TextView batteryLevel, batteryVoltage, batteryTemperature,
-            batteryTechnology, batteryStatus, batteryHealth;
+    private TextView batteryLevel,
+            batteryVoltage,
+            batteryTemperature,
+            batteryTechnology,
+            batteryStatus,
+            batteryHealth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,7 @@ public class BatteryActivity extends AppCompatActivity {
         this.registerReceiver(this.myBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
-    private BroadcastReceiver myBatteryReceiver = new BroadcastReceiver(){
+    public BroadcastReceiver myBatteryReceiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             // TODO Auto-generated method stub

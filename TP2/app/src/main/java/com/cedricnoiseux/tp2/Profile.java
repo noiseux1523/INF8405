@@ -35,6 +35,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -52,7 +54,6 @@ public class Profile extends AppCompatActivity {
     private ImageView Photo;
     private CheckBox Organizer;
     private String Path = "0";
-
     private static String Position = "0 0";
     private static String Calendar = "0";
     private String[] arraySpinner;
@@ -102,8 +103,6 @@ public class Profile extends AppCompatActivity {
 
         // Check profile completeness
         checkProfile();
-
-
     }
 
     /**
@@ -226,18 +225,36 @@ public class Profile extends AppCompatActivity {
 
             // Open existing file to write
             OutputStreamWriter out = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE),0));
+
             out.write(Path + "\r\n");
+
             out.write(Group.getText().toString() + "\r\n");
+
             out.write(Email.getText().toString() + "\r\n");
+
+            boolean admin;
             if (Organizer.isChecked()) {
+                admin = true;
                 out.write("true" + "\r\n");
             } else {
+                admin = false;
                 out.write("false" + "\r\n");
             }
+
+            List<String> activity = Preferences.getSelectedStrings();
             out.write(Preferences.getSelectedItemsAsString() + "\r\n");
+
+            String[] splitPos = Position.split("\\s+");
+            float posX = Float.parseFloat(splitPos[0]);
+            float posY = Float.parseFloat(splitPos[1]);
             out.write(Position + "\r\n");
+
             out.write(Calendar + "\r\n");
+
             out.close();
+
+            // Store the user in external server
+            User.getUser(Email.getText().toString(), Group.getText().toString(), admin, activity, posX, posY);
             Toast.makeText(this, "The content is saved.", Toast.LENGTH_LONG).show();
         }
         catch (java.io.FileNotFoundException e) {

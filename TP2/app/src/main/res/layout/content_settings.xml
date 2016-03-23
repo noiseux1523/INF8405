@@ -179,8 +179,8 @@
         android:textColor="#bdbdbd"
         android:text="(Minimum 3 in order of preference)"
         android:id="@+id/Preferences_info"
+        android:gravity="center"
         android:layout_below="@+id/Organizer"
-        android:layout_toEndOf="@+id/Preferences_text"
-        android:gravity="center" />
+        android:layout_alignStart="@+id/Organizer" />
 
 </RelativeLayout>

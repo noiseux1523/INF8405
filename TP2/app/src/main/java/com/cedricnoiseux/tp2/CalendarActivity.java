@@ -117,6 +117,9 @@ public class CalendarActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Methode to navigate to the menu
+     */
     public void goToMenu() {
         Intent intent = new Intent(this, Menu.class);
         startActivity(intent);
@@ -186,12 +189,18 @@ public class CalendarActivity extends AppCompatActivity {
      * user can pick an account.
      */
     private void refreshResults() {
+        // No account selected
         if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else {
+        }
+        // Account selected
+        else {
+            // Internet connection
             if (isDeviceOnline()) {
                 new MakeRequestTask(mCredential).execute();
-            } else {
+            }
+            // No connection
+            else {
                 mOutputText.setText("No network connection available.");
             }
         }
@@ -224,12 +233,14 @@ public class CalendarActivity extends AppCompatActivity {
      */
     private boolean isGooglePlayServicesAvailable() {
         final int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        // Services unavailable
         if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
             return false;
         } else if (connectionStatusCode != ConnectionResult.SUCCESS ) {
             return false;
         }
+        // Services available
         return true;
     }
 
@@ -307,22 +318,31 @@ public class CalendarActivity extends AppCompatActivity {
             return eventStrings;
         }
 
-
+        /**
+         * Method to initialize variables
+         */
         @Override
         protected void onPreExecute() {
             mOutputText.setText("");
             mProgress.show();
         }
 
+        /**
+         * Method to show the events of the Google Calendar and save them
+         * @param output The 10 next events
+         */
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
+                // No events in calendar
                 mOutputText.setText("No results returned.");
             } else {
+                // Show events
                 output.add(0, "Data retrieved using the Google Calendar API:");
                 mOutputText.setText(TextUtils.join("\n", output));
                 try {
+                    // Save events
                     InputStreamReader tmp = new InputStreamReader(openFileInput(String.valueOf(R.string.PROFILE)));
                     BufferedReader reader = new BufferedReader(tmp);
                     OutputStreamWriter writer = new OutputStreamWriter(openFileOutput("tempFile", 0));
@@ -363,6 +383,9 @@ public class CalendarActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * Method to handle errors
+         */
         @Override
         protected void onCancelled() {
             mProgress.hide();

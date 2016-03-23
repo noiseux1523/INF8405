@@ -27,6 +27,12 @@ public class Menu extends AppCompatActivity {
         });
 
         Recommend = (Button) findViewById(R.id.Recommend);
+        Recommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToBattery();
+            }
+        });
 
         Map = (Button) findViewById(R.id.Map);
         Map.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +74,14 @@ public class Menu extends AppCompatActivity {
      */
     public void goToCalendar() {
         Intent intent = new Intent(this, CalendarActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Method to open Calendar
+     */
+    public void goToBattery() {
+        Intent intent = new Intent(this, BatteryActivity.class);
         startActivity(intent);
     }
 

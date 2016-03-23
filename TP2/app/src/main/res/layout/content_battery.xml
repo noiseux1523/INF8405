@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.cedricnoiseux.tp2.BatteryActivity"
+    tools:showIn="@layout/activity_battery"
+    android:background="#4cae2e">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="ANDROID BATTERY"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Battery Info."
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/batterylevel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Battery Level:"
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/batteryvoltage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Battery Voltage:"
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/batterytemperature"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Battery Temperature:"
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/batterytechology"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Technology:"
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/batterystatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Status:"
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/batteryhealth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Health:"
+        android:layout_marginBottom="3dp"
+        android:textColor="#ffffff"
+        />
+
+</LinearLayout>

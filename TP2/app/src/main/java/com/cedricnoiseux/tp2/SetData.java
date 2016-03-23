@@ -36,8 +36,8 @@ public class SetData extends AsyncTask<ArrayList<String>, Void, String> {
     protected String doInBackground(ArrayList<String>... args) {
             ArrayList<String> l = args[0];
 
-            String value = l.get(0);
-            String fileName = l.get(1);
+            String value = l.get(1);
+            String fileName = l.get(0);
             System.out.println(value);
             System.out.println(fileName);
             try {
@@ -61,43 +61,7 @@ public class SetData extends AsyncTask<ArrayList<String>, Void, String> {
             catch (Exception e) {
                 e.printStackTrace();
             }
-//            File path = Environment.getExternalStoragePublicDirectory(
-//                    Environment.DIRECTORY_MOVIES);
-//            File localFile = new File(path, "/temp.txt");
-//            PrintWriter writer = new PrintWriter(localFile, "UTF-8");
-//            writer.print(value);
-//            writer.close();
-//            String remoteFile = url;
-//
-//
-//            f.connect("www.theprintmint-framing.com");
-//            f.login("clementgamachepf", "31415926535Pi1");
-//            InputStream inputStream = new FileInputStream(localFile);
-//            boolean done = f.storeFile(remoteFile, inputStream);
-//            if (done) {
-//                System.out.println("The first file is uploaded successfully.");
-//            }
-//            else {
-//                System.out.println(f.getReply());
-//                System.out.println(f.getReplyString());
-//                System.out.println(":(");
-//            }
-//            localFile.delete();
-//            inputStream.close();
-//
-//        } catch (Exception e) {
-//            this.exception = e;
-//            System.out.println("didn't work");
-//            e.printStackTrace();
-//        }
-//        try {
-//            if (f.isConnected()) {
-//                f.logout();
-//                f.disconnect();
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
+
         return null;
     }
 

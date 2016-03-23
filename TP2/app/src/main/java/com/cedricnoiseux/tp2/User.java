@@ -1,5 +1,7 @@
 package com.cedricnoiseux.tp2;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,28 +29,70 @@ public class User {
         lastLocationY_ = lastLocationY;
     }
 
-    public User getUser(String email, String groupName, boolean isAdmin,
+    public String toString() {
+        return email_;
+    }
+
+    public static User getUser(String email, String groupName, boolean isAdmin,
                         List<String> nomPreferences, int lastLocationX, int lastLocationY) {
         if (allUsers_ == null) {
-            //todo : aller les chercher dans la base de donnees
-        }
-
-        for (User u : allUsers_) {
-            if (u.email_ == email) {
-                return u;
+            String csv = Utility.getAllLines("users.txt");
+            csv = csv.trim();
+            String [] separated = csv.split("\r?\n");
+            allUsers_ = new ArrayList<User>();
+            for (String s : separated) {
+                String[] elements = s.split(";");
+                String e = elements[0];
+                Group g = Group.getGroup(elements[1]);
+                boolean a = Boolean.parseBoolean(elements[2]);
+                int nbPreferences = Integer.parseInt(elements[3]);
+                List<ActivityType> act = new ArrayList<ActivityType>();
+                for (int i = 0 ; i < nbPreferences ; i++) {
+                    act.add(ActivityType.getActivityType(elements[4 + i]));
+                }
+                float pX = Float.parseFloat(elements[4+nbPreferences]);
+                float pY = Float.parseFloat(elements[5+nbPreferences]);
+                allUsers_.add(new User(e, g, a, act, pX, pY));
             }
         }
-        //rendu la, on sait que le groupe n'existe pas. On le cree
         Group g = Group.getGroup(groupName);
         List<ActivityType> a = new LinkedList<ActivityType>();
         for (String s : nomPreferences) {
             a.add(ActivityType.getActivityType(s));
         }
-        User newUser = new User(email, g, isAdmin, a, lastLocationX, lastLocationY );
-        allUsers_.add(newUser);
-        //todo : ecrire en memoire
-        return newUser;
-    }
+        boolean exists = false;
+        User ret = null;
+        for (User u : allUsers_) {
+            if (u.email_.equals(email)) {
+                exists = true;
+                u = ret = new User(email, g, isAdmin, a, lastLocationX, lastLocationY );
+            }
+        }
+        //rendu la, on sait que le groupe n'existe pas. On le cree
+        if (!exists) {
+            ret = new User(email, g, isAdmin, a, lastLocationX, lastLocationY );
+            allUsers_.add(ret);
+        }
+        String o = "";
+        for (User u : allUsers_) {
+            o+= u.email_ + ";";
+            o+= u.group_.toString() + ";";
+            o+= String.valueOf(u.isAdmin_) + ";";
+            o+= String.valueOf(u.preferences_.size()) + ";";
+            for (ActivityType type : u.preferences_) {
+                o += type.toString() + ";";
+            }
+            o += String.valueOf(u.lastLocationX_) + ";";
+            o += String.valueOf(u.lastLocationY_) + "\n";
+        }
+        try {
+            Utility.setAllLines("users.txt", o);
+        }
+        catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+            return ret;
+        }
 
 
 

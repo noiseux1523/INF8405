@@ -16,12 +16,13 @@ public class GetData extends AsyncTask<String, Void, String> {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(urls[0])
+                    .url("http://theprintmint-framing.com/tp2/" + urls[0])
                     .build();
             Response response = client.newCall(request).execute();
             return response.body().string();
         } catch (Exception e) {
             this.exception = e;
+            e.printStackTrace();
             return null;
         }
     }

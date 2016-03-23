@@ -101,6 +101,8 @@ public class Profile extends AppCompatActivity {
 
         // Check profile completeness
         checkProfile();
+
+
     }
 
     public void requestPermissions() {

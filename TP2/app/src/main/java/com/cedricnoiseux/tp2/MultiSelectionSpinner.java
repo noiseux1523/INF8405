@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.os.StrictMode;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,6 +51,15 @@ public class MultiSelectionSpinner extends Spinner implements
             throw new IllegalArgumentException(
                     "Argument 'which' is out of bounds.");
         }
+
+        try {
+            System.out.println(Utility.getAllLines("http://theprintmint-framing.com/tp2/allo.txt"));
+            Utility.setAllLines("bonjour","allo.txt");
+        }
+        catch (Exception e) {
+            System.out.println("didn't work");
+        }
+
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.cedricnoiseux.tp2;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,20 +15,41 @@ public class Group {
         name_ = name;
     }
 
+    public String toString() {
+        return name_;
+    }
+
     public static Group getGroup(String name) {
         if (allGroups_ == null) {
-            //todo : aller les chercher dans la base de donnees
-            
+            String csv = Utility.getAllLines("groups.txt");
+            csv = csv.trim();
+            String [] separated = csv.split(";");
+            allGroups_ = new ArrayList<Group>();
+            for (String s : separated) {
+                allGroups_.add(new Group(s));
+            }
         }
+        System.out.println("getting groups");
         for (Group g : allGroups_) {
-            if (g.name_ == name) {
+            System.out.println(g.name_);
+            if (g.name_.equals(name)) {
                 return g;
             }
         }
         //rendu la, on sait que le groupe n'existe pas. On le cree
         Group newGroup = new Group(name);
         allGroups_.add(newGroup);
-        //todo : ecrire en memoire
+        String fileOut = "";
+        for (Group g : allGroups_) {
+            fileOut += g.name_ + ";";
+        }
+        fileOut =fileOut.substring(0, fileOut.length()-1);
+        try {
+        Utility.setAllLines("groups.txt", fileOut);
+        }
+        catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
         return newGroup;
     }
 }

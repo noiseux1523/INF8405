@@ -24,14 +24,14 @@ public class Utility {
     public static String lastData = null;
 
 
-    public static String getAllLines(String url) throws IOException{
+    public static String getAllLines(String url) {
         try {
             GetData process = new GetData();
             process.execute(url);
             return process.get();
         }
         catch (Exception e) {
-            System.out.println("didn't work");
+            e.printStackTrace();
             return null;
         }
     }
@@ -47,6 +47,7 @@ public class Utility {
             process.get();
         }
         catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

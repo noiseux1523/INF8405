@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,13 +68,18 @@ public class MultiSelectionSpinner extends Spinner implements
                     "Argument 'which' is out of bounds.");
         }
 
-        try {
-            System.out.println(Utility.getAllLines("http://theprintmint-framing.com/tp2/allo.txt"));
-            Utility.setAllLines("bonjour","allo.txt");
-        }
-        catch (Exception e) {
-            System.out.println("didn't work");
-        }
+//        try {
+//            ArrayList<String> a = new ArrayList<String>();
+//            a.add("Restaurant");
+//            a.add("Library");
+//            a.add("Cafeteria");
+//            User u = User.getUser("clementgamache@gmail.com", "inexistant", false, a, 50, 20);
+//            System.out.println(u.toString());
+//
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 

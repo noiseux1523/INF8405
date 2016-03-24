@@ -101,10 +101,7 @@ public class User {
             System.out.println(ex.getMessage());
         }
             return ret;
-        }
-<<<<<<< HEAD
-=======
-
+    }
 
     private static List<User> getUsersFromGroup(String name) {
         List<User> ret = new ArrayList<User>();
@@ -157,5 +154,4 @@ public class User {
         }
         return ret;
     }
->>>>>>> 3f428fc04a145e9ec955fbc15d88c71bce42c9f5
 }

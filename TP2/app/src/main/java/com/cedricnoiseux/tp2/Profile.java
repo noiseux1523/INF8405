@@ -254,7 +254,9 @@ public class Profile extends AppCompatActivity {
             out.close();
 
             // Store the user in external server
-            User.getUser(Email.getText().toString(), Group.getText().toString(), admin, activity, posX, posY);
+            if (Email.getText().toString() != null && Group.getText().toString() != null && activity.size() >= 3){
+                User.getUser(Email.getText().toString(), Group.getText().toString(), admin, activity, posX, posY);
+            }
             Toast.makeText(this, "The content is saved.", Toast.LENGTH_LONG).show();
         }
         catch (java.io.FileNotFoundException e) {
@@ -279,12 +281,18 @@ public class Profile extends AppCompatActivity {
      */
     public void goToMenu() {
         // File completed, position and calendar updated (when coming from menu)
-        if (getLines() >= 5 && !Position.equals("0 0") && !Calendar.equals("0") && PROFILE_COMPLETED) {
+        if (getLines() >= 7
+                && !Path.equals("0")
+                && Preferences.getSelectedStrings().size() >= 3
+                && !Position.equals("0 0")
+                && !Calendar.equals("0")
+                && PROFILE_COMPLETED) {
             Intent intent = new Intent(this, Menu.class);
             startActivity(intent);
         }
         // File completed, position and calendar need to be updated (when starting application)
-        else if (getLines() >= 5 && (Position.equals("0 0") || Calendar.equals("0") || !PROFILE_COMPLETED)) {
+        else if (getLines() >= 7 && !Path.equals("0") && Preferences.getSelectedStrings().size() >= 3
+                && (Position.equals("0 0") || Calendar.equals("0") || !PROFILE_COMPLETED)) {
             PROFILE_COMPLETED = true;
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("Organisapp");
@@ -340,7 +348,8 @@ public class Profile extends AppCompatActivity {
         try {
             InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             // File doesn't exist or incomplete
-            if (in == null || getLines() < 5) {
+            int lignes = getLines();
+            if (in == null || getLines() < 7) {
                 Toast.makeText(this, "You must complete your profile first.", Toast.LENGTH_LONG).show();
             }
             // File exists
@@ -380,6 +389,7 @@ public class Profile extends AppCompatActivity {
                 while ((str = reader.readLine()) != null) {
                     switch (counter) {
                         case 0:
+                            Path = str;
                             BitmapFactory.Options options = new BitmapFactory.Options();
                             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                             Bitmap bitmap = BitmapFactory.decodeFile(str, options);

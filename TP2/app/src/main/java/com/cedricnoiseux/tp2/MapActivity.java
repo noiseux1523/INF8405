@@ -226,6 +226,7 @@ public class MapActivity extends AppCompatActivity implements
 						if (counter == 5) {
 							writer.write(String.valueOf(latLng.longitude) + " " + String.valueOf(latLng.latitude) + "\r\n");
                         } else if (counter == 3) {
+							writer.write(currentLine + "\r\n");
                             Email = currentLine;
 						} else {
 							writer.write(currentLine + "\r\n");
@@ -313,6 +314,7 @@ public class MapActivity extends AppCompatActivity implements
 				if (counter == 5) {
 					writer.write(String.valueOf(latLng.longitude) + " " + String.valueOf(latLng.latitude) + "\r\n");
                 } else if (counter == 3) {
+                    writer.write(currentLine + "\r\n");
                     Email = currentLine;
 				} else {
 					writer.write(currentLine + "\r\n");
@@ -334,6 +336,8 @@ public class MapActivity extends AppCompatActivity implements
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+
 
         // Add marker
 		map.clear();

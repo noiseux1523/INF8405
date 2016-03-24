@@ -20,8 +20,6 @@ public class Menu extends AppCompatActivity {
 
     private String batteryLevelIni_;
     private String batteryLevelFinal_;
-    //private TextView batteryLevelIni;
-    //private TextView batteryLevelFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +60,6 @@ public class Menu extends AppCompatActivity {
 
         Meeting = (Button) findViewById(R.id.Meeting);
 
-        //batteryLevelIni = (TextView)findViewById(R.id.batterylevelini);
-        //batteryLevelFinal = (TextView)findViewById(R.id.batterylevelfinal);
-
         this.registerReceiver(this.myBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
@@ -82,8 +77,6 @@ public class Menu extends AppCompatActivity {
                     batteryLevelIni_ = batteryLevelFinal_;
                     batteryLevelFinal_ = "Level: " + String.valueOf(arg1.getIntExtra("level", 0)) + "%";
                 }
-                //batteryLevelIni.setText(batteryLevelIni_);
-                //batteryLevelFinal.setText(batteryLevelFinal_);
             }
         }
     };

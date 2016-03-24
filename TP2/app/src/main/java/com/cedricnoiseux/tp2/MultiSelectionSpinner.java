@@ -53,7 +53,7 @@ public class MultiSelectionSpinner extends Spinner implements
                     "Argument 'which' is out of bounds.");
         }
 
-        
+
 
     }
 

@@ -26,12 +26,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -44,6 +47,7 @@ public class MapActivity extends AppCompatActivity implements
 
 	public static boolean initialLocation = false;
 	private String Email;
+    private String Group;
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
 	private GoogleApiClient mGoogleApiClient;
@@ -225,7 +229,7 @@ public class MapActivity extends AppCompatActivity implements
 					while((currentLine = reader.readLine()) != null) {
 						if (counter == 5) {
 							writer.write(String.valueOf(latLng.longitude) + " " + String.valueOf(latLng.latitude) + "\r\n");
-                        } else if (counter == 3) {
+                        } else if (counter == 2) {
 							writer.write(currentLine + "\r\n");
                             Email = currentLine;
 						} else {
@@ -264,15 +268,12 @@ public class MapActivity extends AppCompatActivity implements
 			}
 
             // Show marker if not loading application for the first time
-			if (initialLocation){
 				MarkerOptions options = new MarkerOptions()
 						.position(latLng)
 						.title(Email);
 				map.addMarker(options);
-
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
 				map.animateCamera(cameraUpdate);
-			}
 			initialLocation = true;
         } else {
         	Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
@@ -313,9 +314,12 @@ public class MapActivity extends AppCompatActivity implements
 			while((currentLine = reader.readLine()) != null) {
 				if (counter == 5) {
 					writer.write(String.valueOf(latLng.longitude) + " " + String.valueOf(latLng.latitude) + "\r\n");
-                } else if (counter == 3) {
+                } else if (counter == 2) {
                     writer.write(currentLine + "\r\n");
                     Email = currentLine;
+                } else if (counter == 1) {
+                    writer.write(currentLine + "\r\n");
+                    Group = currentLine;
 				} else {
 					writer.write(currentLine + "\r\n");
 				}
@@ -336,15 +340,24 @@ public class MapActivity extends AppCompatActivity implements
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        map.clear();
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(Email));
 
-
-
-        // Add marker
-		map.clear();
-		MarkerOptions options = new MarkerOptions()
-				.position(latLng)
-				.title(Email);
-		map.addMarker(options);
+        List<User> members = User.getUsersFromGroup(Group);
+        ArrayList<MarkerOptions> markersArray = new ArrayList<MarkerOptions>();
+        for (int i = 0; i < members.size(); i++) {
+            // Add marker
+            float[] position = User.getPositionFromUser(members.get(i));
+            markersArray.add(i, (new MarkerOptions()
+                                    .position(new LatLng(position[0], position[1]))
+                                    .title(members.get(i).toString())));
+        }
+        for (int i = 0; i < markersArray.size(); i++) {
+            // Add marker
+            map.addMarker(markersArray.get(i));
+        }
 
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }

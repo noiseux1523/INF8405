@@ -103,7 +103,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="140dp"
-            android:text="MEETING"
+            android:text="PLACE"
             android:id="@+id/Meeting"
             android:background="@drawable/button"
             android:textColor="#ffffff"

@@ -22,6 +22,7 @@ public class User {
     private float lastLocationX_;
     private float lastLocationY_;
 
+
     private static List<User> allUsers_ = null;
 
     private User(String email, Group group, boolean isAdmin, List<ActivityType> preferences,
@@ -34,9 +35,11 @@ public class User {
         lastLocationY_ = lastLocationY;
     }
 
+
     public String toString() {
         return email_;
     }
+
 
     public static User getUser(String email, String groupName, boolean isAdmin,
                         List<String> nomPreferences, float lastLocationX, float lastLocationY) {
@@ -103,7 +106,29 @@ public class User {
             return ret;
     }
 
-    private static List<User> getUsersFromGroup(String name) {
+
+    public static List<User> getUsersFromGroup(String name) {
+        if (allUsers_ == null) {
+            String csv = Utility.getAllLines("users.txt");
+            csv = csv.trim();
+            String [] separated = csv.split("\r?\n");
+            allUsers_ = new ArrayList<User>();
+            for (String s : separated) {
+                String[] elements = s.split(";");
+                String e = elements[0];
+                Group g = Group.getGroup(elements[1]);
+                boolean a = Boolean.parseBoolean(elements[2]);
+                int nbPreferences = Integer.parseInt(elements[3]);
+                List<ActivityType> act = new ArrayList<ActivityType>();
+                for (int i = 0 ; i < nbPreferences ; i++) {
+                    act.add(ActivityType.getActivityType(elements[4 + i]));
+                }
+                float pX = Float.parseFloat(elements[4+nbPreferences]);
+                float pY = Float.parseFloat(elements[5+nbPreferences]);
+                allUsers_.add(new User(e, g, a, act, pX, pY));
+            }
+        }
+
         List<User> ret = new ArrayList<User>();
         Group search = Group.getGroup(name);
         for (User u : allUsers_) {
@@ -113,6 +138,18 @@ public class User {
         }
         return ret;
     }
+
+    public static float[] getPositionFromUser(User user) {
+        float[] position = {0,0};
+        for (User u : allUsers_) {
+            if (u.email_ == user.email_) {
+                position[0] = u.lastLocationX_;
+                position[1] = u.lastLocationY_;
+            }
+        }
+        return position;
+    }
+
 
     public static PointF getAveragePosition(String groupName) {
         List<User> members = getUsersFromGroup(groupName);
@@ -124,6 +161,7 @@ public class User {
         }
         return (new PointF(sumX / members.size(), sumY / members.size()));
     }
+
 
     public static List<ActivityType> getCommonInterests(String groupName) {
         List<User> members = getUsersFromGroup(groupName);

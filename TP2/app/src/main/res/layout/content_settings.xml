@@ -35,13 +35,22 @@
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:id="@+id/Photo"
-        android:background="#4cae2e"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/ClickPicture"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/Group">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Photo"
+            android:background="#4cae2e"
+            android:layout_above="@+id/Preferences_text"
+            android:layout_toStartOf="@+id/ClickPicture" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="80dp"
@@ -170,8 +179,8 @@
         android:textColor="#bdbdbd"
         android:text="(Minimum 3 in order of preference)"
         android:id="@+id/Preferences_info"
+        android:gravity="center"
         android:layout_below="@+id/Organizer"
-        android:layout_toEndOf="@+id/Preferences_text"
-        android:gravity="center" />
+        android:layout_alignStart="@+id/Organizer" />
 
 </RelativeLayout>

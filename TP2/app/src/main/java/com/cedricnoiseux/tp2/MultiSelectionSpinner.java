@@ -26,6 +26,10 @@ public class MultiSelectionSpinner extends Spinner implements
 
     ArrayAdapter<String> simple_adapter;
 
+    /**
+     * Constructor
+     * @param context
+     */
     public MultiSelectionSpinner(Context context) {
         super(context);
 
@@ -34,6 +38,11 @@ public class MultiSelectionSpinner extends Spinner implements
         super.setAdapter(simple_adapter);
     }
 
+    /**
+     * Constructor
+     * @param context
+     * @param attrs
+     */
     public MultiSelectionSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -42,10 +51,16 @@ public class MultiSelectionSpinner extends Spinner implements
         super.setAdapter(simple_adapter);
     }
 
+    /**
+     * Method to handle on preference click
+     * @param dialog
+     * @param which
+     * @param isChecked
+     */
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
         if (mSelection != null && which < mSelection.length) {
+            // Add preference to the list shown
             mSelection[which] = isChecked;
-
             simple_adapter.clear();
             simple_adapter.add(buildSelectedItemString());
         } else {
@@ -57,6 +72,10 @@ public class MultiSelectionSpinner extends Spinner implements
 
     }
 
+    /**
+     * Method to show the preference items
+     * @return True or false
+     */
     @Override
     public boolean performClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -65,12 +84,20 @@ public class MultiSelectionSpinner extends Spinner implements
         return true;
     }
 
+    /**
+     * Method to override setAdapter (which is not supported)
+     * @param adapter
+     */
     @Override
     public void setAdapter(SpinnerAdapter adapter) {
         throw new RuntimeException(
                 "setAdapter is not supported by MultiSelectSpinner.");
     }
 
+    /**
+     * Method to set the items shown in the spinner
+     * @param items
+     */
     public void setItems(String[] items) {
         _items = items;
         mSelection = new boolean[_items.length];
@@ -79,6 +106,10 @@ public class MultiSelectionSpinner extends Spinner implements
         Arrays.fill(mSelection, false);
     }
 
+    /**
+     * Method to set the items shown in the spinner
+     * @param items
+     */
     public void setItems(List<String> items) {
         _items = items.toArray(new String[items.size()]);
         mSelection = new boolean[_items.length];
@@ -87,6 +118,10 @@ public class MultiSelectionSpinner extends Spinner implements
         Arrays.fill(mSelection, false);
     }
 
+    /**
+     * Method to set the items true or false in the spinner, based on previous use.
+     * @param selection
+     */
     public void setSelection(String[] selection) {
         for (String cell : selection) {
             for (int j = 0; j < _items.length; ++j) {
@@ -97,6 +132,10 @@ public class MultiSelectionSpinner extends Spinner implements
         }
     }
 
+    /**
+     * Method to set the items true or false in the spinner, based on previous use.
+     * @param selection
+     */
     public void setSelection(List<String> selection) {
         for (int i = 0; i < mSelection.length; i++) {
             mSelection[i] = false;
@@ -112,6 +151,10 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter.add(buildSelectedItemString());
     }
 
+    /**
+     * Method to set the items true or false in the spinner, based on previous use.
+     * @param index
+     */
     public void setSelection(int index) {
         for (int i = 0; i < mSelection.length; i++) {
             mSelection[i] = false;
@@ -126,6 +169,10 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter.add(buildSelectedItemString());
     }
 
+    /**
+     * Method to set the items true or false in the spinner, based on previous use.
+     * @param selectedIndicies
+     */
     public void setSelection(int[] selectedIndicies) {
         for (int i = 0; i < mSelection.length; i++) {
             mSelection[i] = false;
@@ -142,6 +189,10 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter.add(buildSelectedItemString());
     }
 
+    /**
+     * Méthod to get the items selected
+     * @return List of items
+     */
     public List<String> getSelectedStrings() {
         List<String> selection = new LinkedList<String>();
         for (int i = 0; i < _items.length; ++i) {
@@ -152,6 +203,10 @@ public class MultiSelectionSpinner extends Spinner implements
         return selection;
     }
 
+    /**
+     * Méthod to get the items selected
+     * @return List of items
+     */
     public List<Integer> getSelectedIndicies() {
         List<Integer> selection = new LinkedList<Integer>();
         for (int i = 0; i < _items.length; ++i) {
@@ -162,6 +217,10 @@ public class MultiSelectionSpinner extends Spinner implements
         return selection;
     }
 
+    /**
+     * Méthod to get the items selected
+     * @return String of items
+     */
     public String buildSelectedItemString() {
         StringBuilder sb = new StringBuilder();
         boolean foundOne = false;
@@ -178,6 +237,10 @@ public class MultiSelectionSpinner extends Spinner implements
         return sb.toString();
     }
 
+    /**
+     * Méthod to get the items selected
+     * @return String of items
+     */
     public String getSelectedItemsAsString() {
         StringBuilder sb = new StringBuilder();
         boolean foundOne = false;

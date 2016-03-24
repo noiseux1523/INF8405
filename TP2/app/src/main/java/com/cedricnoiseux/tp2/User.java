@@ -39,7 +39,8 @@ public class User {
     }
 
     public static User getUser(String email, String groupName, boolean isAdmin,
-                        List<String> nomPreferences, int lastLocationX, int lastLocationY) {
+                        List<String> nomPreferences, float lastLocationX, float lastLocationY) {
+
         if (allUsers_ == null) {
             String csv = Utility.getAllLines("users.txt");
             csv = csv.trim();
@@ -60,6 +61,7 @@ public class User {
                 allUsers_.add(new User(e, g, a, act, pX, pY));
             }
         }
+
         Group g = Group.getGroup(groupName);
         List<ActivityType> a = new LinkedList<ActivityType>();
         for (String s : nomPreferences) {
@@ -73,11 +75,13 @@ public class User {
                 u = ret = new User(email, g, isAdmin, a, lastLocationX, lastLocationY );
             }
         }
+
         //rendu la, on sait que le groupe n'existe pas. On le cree
         if (!exists) {
             ret = new User(email, g, isAdmin, a, lastLocationX, lastLocationY );
             allUsers_.add(ret);
         }
+
         String o = "";
         for (User u : allUsers_) {
             o+= u.email_ + ";";
@@ -97,8 +101,7 @@ public class User {
             System.out.println(ex.getMessage());
         }
             return ret;
-        }
-
+    }
 
     private static List<User> getUsersFromGroup(String name) {
         List<User> ret = new ArrayList<User>();

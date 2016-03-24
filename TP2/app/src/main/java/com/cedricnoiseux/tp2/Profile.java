@@ -35,6 +35,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -52,13 +54,15 @@ public class Profile extends AppCompatActivity {
     private ImageView Photo;
     private CheckBox Organizer;
     private String Path = "0";
-                                                //////////////////////////////////////
-    private static String Position = "-123 65"; // NE PAS OUBLIER DE RECHANGER À "0 0"
-                                                //////////////////////////////////////
+    private static String Position = "0 0";
     private static String Calendar = "0";
     private String[] arraySpinner;
     private MultiSelectionSpinner Preferences;
 
+    /**
+     * Create the main activity.
+     * @param savedInstanceState previously saved instance data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,17 +98,16 @@ public class Profile extends AppCompatActivity {
         Photo = (ImageView) findViewById(R.id.Photo);
         Organizer = (CheckBox) findViewById(R.id.Organizer);
 
-        // Check gallery permissions
+        // Check permissions
         requestPermissions();
-
-        // Update Position and Calendar
 
         // Check profile completeness
         checkProfile();
-
-
     }
 
+    /**
+     * Method to request various permissions
+     */
     public void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
@@ -130,7 +133,7 @@ public class Profile extends AppCompatActivity {
     }
 
     /**
-     * Show message to notify if permission granted or not
+     * Method to show message to notify if permission granted or not
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -147,7 +150,7 @@ public class Profile extends AppCompatActivity {
     }
 
     /**
-     * Gives access to photo gallery
+     * Method to give access to photo gallery
      */
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE})
     public void browsePicture() {
@@ -190,12 +193,14 @@ public class Profile extends AppCompatActivity {
      */
     public void saveClicked() {
         try {
+            // Open existing file to read
             InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             if (in != null) {
                 InputStreamReader tmp = new InputStreamReader(in);
                 BufferedReader reader = new BufferedReader(tmp);
                 String str;
                 int counter = 0;
+                // Assign not null values to Path, Position and Calendar
                 while ((str = reader.readLine()) != null) {
                     switch (counter) {
                         case 0:
@@ -217,23 +222,45 @@ public class Profile extends AppCompatActivity {
                 }
             }
             in.close();
+
+            // Open existing file to write
             OutputStreamWriter out = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE),0));
+
             out.write(Path + "\r\n");
+
             out.write(Group.getText().toString() + "\r\n");
+
             out.write(Email.getText().toString() + "\r\n");
+
+            boolean admin;
             if (Organizer.isChecked()) {
+                admin = true;
                 out.write("true" + "\r\n");
             } else {
+                admin = false;
                 out.write("false" + "\r\n");
             }
+
+            List<String> activity = Preferences.getSelectedStrings();
             out.write(Preferences.getSelectedItemsAsString() + "\r\n");
+
+            String[] splitPos = Position.split("\\s+");
+            float posX = Float.parseFloat(splitPos[0]);
+            float posY = Float.parseFloat(splitPos[1]);
             out.write(Position + "\r\n");
+
             out.write(Calendar + "\r\n");
+
             out.close();
+
+            // Store the user in external server
+            if (Email.getText().toString() != null && Group.getText().toString() != null && activity.size() >= 3){
+                User.getUser(Email.getText().toString(), Group.getText().toString(), admin, activity, posX, posY);
+            }
             Toast.makeText(this, "The content is saved.", Toast.LENGTH_LONG).show();
         }
         catch (java.io.FileNotFoundException e) {
-            // fichier par créé encore
+            // File not created
             try {
                 OutputStreamWriter out = new OutputStreamWriter(openFileOutput(String.valueOf(R.string.PROFILE),0));
                 out.close();
@@ -253,11 +280,19 @@ public class Profile extends AppCompatActivity {
      * Method to go to the Menu window
      */
     public void goToMenu() {
-        if (getLines() >= 5 && !Position.equals("0 0") && !Calendar.equals("0") && PROFILE_COMPLETED) { // & on a une position initiale
+        // File completed, position and calendar updated (when coming from menu)
+        if (getLines() >= 7
+                && !Path.equals("0")
+                && Preferences.getSelectedStrings().size() >= 3
+                && !Position.equals("0 0")
+                && !Calendar.equals("0")
+                && PROFILE_COMPLETED) {
             Intent intent = new Intent(this, Menu.class);
             startActivity(intent);
         }
-        else if (getLines() >= 5 && (Position.equals("0 0") || Calendar.equals("0") || !PROFILE_COMPLETED)) { // on a pas de position initiale ou de calendrier
+        // File completed, position and calendar need to be updated (when starting application)
+        else if (getLines() >= 7 && !Path.equals("0") && Preferences.getSelectedStrings().size() >= 3
+                && (Position.equals("0 0") || Calendar.equals("0") || !PROFILE_COMPLETED)) {
             PROFILE_COMPLETED = true;
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setTitle("Organisapp");
@@ -272,6 +307,7 @@ public class Profile extends AppCompatActivity {
             dlgAlert.setMessage("We need your location to continue");
             dlgAlert.create().show();
         }
+        // File incomplete
         else {
             Toast.makeText(this, "You must complete your profile before going to the menu.", Toast.LENGTH_LONG).show();
         }
@@ -284,6 +320,7 @@ public class Profile extends AppCompatActivity {
     public int getLines() {
         int lines = 0;
         try {
+            // Open file to count not null lines
             InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             InputStreamReader tmp = new InputStreamReader(in);
             BufferedReader reader = new BufferedReader(tmp);
@@ -296,7 +333,7 @@ public class Profile extends AppCompatActivity {
             reader.close();
         }
         catch (java.io.FileNotFoundException e) {
-            // fichier par créé encore
+            // File note created
         }
         catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
@@ -310,10 +347,14 @@ public class Profile extends AppCompatActivity {
     public void checkProfile() {
         try {
             InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
-            if (in == null || getLines() < 5) {
+            // File doesn't exist or incomplete
+            int lignes = getLines();
+            if (in == null || getLines() < 7) {
                 Toast.makeText(this, "You must complete your profile first.", Toast.LENGTH_LONG).show();
             }
+            // File exists
             else {
+                // Fill each input and go to menu if app is starting
                 readFileInEditor();
                 if (!PROFILE_COMPLETED) {
                     goToMenu();
@@ -323,8 +364,8 @@ public class Profile extends AppCompatActivity {
         }
 
         catch (java.io.FileNotFoundException e) {
+            // File not created
             Toast.makeText(this, "You must create your profile first.", Toast.LENGTH_LONG).show();
-            // fichier par créé encore
         }
 
         catch (Throwable t) {
@@ -337,15 +378,18 @@ public class Profile extends AppCompatActivity {
      */
     public void readFileInEditor() {
         try {
+            // Open existing file
             InputStream in = openFileInput(String.valueOf(R.string.PROFILE));
             if (in != null) {
                 InputStreamReader tmp = new InputStreamReader(in);
                 BufferedReader reader = new BufferedReader(tmp);
                 String str;
                 int counter = 0;
+                // Fill each profile input and assign values to Position and Calendar
                 while ((str = reader.readLine()) != null) {
                     switch (counter) {
                         case 0:
+                            Path = str;
                             BitmapFactory.Options options = new BitmapFactory.Options();
                             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                             Bitmap bitmap = BitmapFactory.decodeFile(str, options);
@@ -385,7 +429,7 @@ public class Profile extends AppCompatActivity {
             }
         }
         catch (java.io.FileNotFoundException e) {
-            // fichier par créé encore
+            // File not created
         }
         catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();

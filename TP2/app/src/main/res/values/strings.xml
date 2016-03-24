@@ -20,4 +20,5 @@
         No location detected. Make sure location is enabled on the device.
     </string>
     <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_battery">BatteryActivity</string>
 </resources>

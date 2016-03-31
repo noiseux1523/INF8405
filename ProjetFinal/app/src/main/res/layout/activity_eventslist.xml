@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ActivityMenu">
+    tools:context=".ActivityEventsList">
 
-    <include layout="@layout/content_menu" />
+    <include layout="@layout/content_eventslist" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -45,8 +45,6 @@ public class Menu extends AppCompatActivity {
     private String Group;
     private String Place;
     private boolean Organizer;
-    private String batteryLevelIni_;
-    private String batteryLevelFinal_;
 
     protected CharSequence[] receivers = {"Receiver1", "Receiver2", "Receivers3"};
     protected ArrayList<CharSequence> selectedReceivers = new ArrayList<>();
@@ -223,24 +221,6 @@ public class Menu extends AppCompatActivity {
             dialog.show();
         }
     }
-
-    /**
-     * Method to evaluate battery
-     */
-    private BroadcastReceiver myBatteryReceiver = new BroadcastReceiver(){
-        @Override
-        public void onReceive(Context arg0, Intent arg1) {
-            if (arg1.getAction().equals(Intent.ACTION_BATTERY_CHANGED)){
-                if (batteryLevelIni_ == null && batteryLevelFinal_ == null) {
-                    batteryLevelFinal_ = "Level: " + String.valueOf(arg1.getIntExtra("level", 0)) + "%";
-                    batteryLevelIni_ = batteryLevelFinal_;
-                } else {
-                    batteryLevelIni_ = batteryLevelFinal_;
-                    batteryLevelFinal_ = "Level: " + String.valueOf(arg1.getIntExtra("level", 0)) + "%";
-                }
-            }
-        }
-    };
 
     /**
      * Method to open Profile activity

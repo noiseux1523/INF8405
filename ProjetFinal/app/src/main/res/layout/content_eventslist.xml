@@ -11,7 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ActivityEventsList"
     tools:showIn="@layout/activity_eventslist"
-    android:background="@drawable/Background">
+    android:background="@drawable/background">
 
     <TextView
         android:layout_width="fill_parent"

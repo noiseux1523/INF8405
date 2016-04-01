@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.net.URLEncoder;
+import java.util.LinkedList;
 
 
 import okhttp3.FormBody;
@@ -30,33 +31,29 @@ import okhttp3.Response;
 /**
  * Created by User on 2016-03-22.
  */
-public class AddEvent extends AsyncTask<Event, Void, String> {
+public class SqlGet extends AsyncTask<String, Void, LinkedList<Event>> {
     private Exception exception;
 
-    protected String doInBackground(Event... args) {
-        Event e = args[0];
+    protected LinkedList<Event> doInBackground(String... args) {
 
         try {
-
             OkHttpClient client = new OkHttpClient();
             RequestBody formBody = new FormBody.Builder()
                     .add("username", SqlUtility.userName)
                     .add("password", SqlUtility.password)
-                    .add("name", e.name)
-                    .add("host", e.host)
-                    .add("locationName", e.locationName)
-                    .add("x", Float.valueOf(e.locX).toString())
-                    .add("y", Float.valueOf(e.locY).toString())
+                    .add("query", args[0])
                     .build();
             Request request = new Request.Builder()
-                    .url("http://theprintmint-framing.com/tp3/AddEvent.php")
+                    .url("http://theprintmint-framing.com/tp3/SqlGet.php")
                     .post(formBody)
                     .build();
 
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            System.out.println(response.body().string());
+            String output = response.body().string();
+            System.out.println(output);
+            return SqlUtility.phpStringToEvents(output);
 
         }
         catch (Exception ex) {
@@ -66,7 +63,7 @@ public class AddEvent extends AsyncTask<Event, Void, String> {
         return null;
     }
 
-    protected void onPostExecute(String s) {
+    protected  void onPostExecute(LinkedList<Event> l) {
         //Utility.lastData = o;
         // TODO: check this.exception
         // TODO: do something with the feed

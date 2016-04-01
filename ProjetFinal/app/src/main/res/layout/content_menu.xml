@@ -9,11 +9,72 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.cedricnoiseux.projetfinal.Menu"
-    tools:showIn="@layout/activity_menu">
+    tools:context=".ActivityMenu"
+    tools:showIn="@layout/activity_menu"
+    android:background="@drawable/Background">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="REAL SMASH BROS"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="35dp"
+        android:typeface="monospace" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/mid"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/mid"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="SHOW EVENTS"
+            android:id="@+id/show"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/relativeLayout" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="MANAGE EVENTS"
+            android:id="@+id/manage"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
 </RelativeLayout>

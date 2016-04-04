@@ -11,7 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ActivityMenu"
     tools:showIn="@layout/activity_menu"
-    android:background="@drawable/background">
+    android:background="@drawable/smash">
 
     <TextView
         android:layout_width="fill_parent"
@@ -75,6 +75,19 @@
             android:typeface="monospace"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mOutputText"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -1,16 +1,32 @@
 package com.cedricnoiseux.projetfinal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class ActivityEditEvent extends AppCompatActivity {
+    private TextView mBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        mBack = (TextView) findViewById(R.id.back);
+        mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToEdit();
+            }
+        });
+    }
+
+    public void goToEdit() {
+        Intent intent = new Intent(this, ActivityManageEvent.class);
+        startActivity(intent);
     }
 
 }

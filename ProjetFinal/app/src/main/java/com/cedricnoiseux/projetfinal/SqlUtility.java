@@ -14,7 +14,7 @@ public class SqlUtility {
     public static void addParticipation(User u, Event e) {
         String q = "INSERT INTO Participation (USERNAME, EVENTID) " +
                 "VALUES (" + u.email + ", " + Integer.valueOf(e.id).toString() + ")";
-        SqlSet process= new SqlSet();
+        SqlSet process = new SqlSet();
         process.execute(q);
     }
 
@@ -26,10 +26,11 @@ public class SqlUtility {
         process.execute(q);
     }
 
-    public static void addEvent(Event e) throws Exception{ //S'ASSURER QUE L'EVENEMENT AIT UN ID DE -1
+    public static void addEvent(Event e) throws Exception { //S'ASSURER QUE L'EVENEMENT AIT UN ID DE -1
         if (e.id != -1) {
             throw new Exception("This event is not new");
         }
+
         String q = "INSERT INTO Events (NAME, HOST, LOCATIONNAME, DATE, POSITIONX, POSITIONY) " +
                 "VALUES " + e.toSqlString();
         SqlSet process= new SqlSet();

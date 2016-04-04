@@ -1,4 +1,9 @@
 <resources>
-    <string name="app_name">Projet Final</string>
+    <string name="app_name">Real Smash Bros</string>
+    <string name="title_activity_event_edit">Event Edit</string>
+    <string name="title_activity_event_list">Events List</string>
+    <string name="title_activity_event_map">Events Map</string>
+    <string name="title_activity_event_manage">Events Manage</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_activity_google_maps">Map</string>
 </resources>

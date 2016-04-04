@@ -15,7 +15,7 @@ public class Event {
     public float locY;
 
 
-    public Event(int i, String n,String h, String lN, java.util.Date d, float x, float y) {
+    public Event(int i, String n, String h, String lN, java.util.Date d, float x, float y) {
         id = i;
         name = n;
         host = h;

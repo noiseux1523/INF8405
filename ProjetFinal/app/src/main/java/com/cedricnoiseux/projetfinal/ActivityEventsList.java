@@ -1,20 +1,31 @@
 package com.cedricnoiseux.projetfinal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-//
-// MODIFY FOR GOOGLE MAPS ACTIVITY
-//
-
+import android.view.View;
+import android.widget.TextView;
 
 public class ActivityEventsList extends AppCompatActivity {
+    private TextView mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventslist);
 
+        mMenu = (TextView) findViewById(R.id.menu);
+        mMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMenu();
+            }
+        });
+    }
+
+    public void goToMenu() {
+        Intent intent = new Intent(this, ActivityMenu.class);
+        startActivity(intent);
     }
 
 }

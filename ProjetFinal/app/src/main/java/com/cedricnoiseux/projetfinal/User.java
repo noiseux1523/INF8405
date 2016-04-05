@@ -8,10 +8,10 @@ public class User {
     public float lastX;
     public float lastY;
 
-    public User(String username) {
-        email = username;
-        lastX = 0;
-        lastY = 0;
+    public User(String e, float x , float y) {
+        email = e;
+        lastX = x;
+        lastY = y;
     }
 
 }

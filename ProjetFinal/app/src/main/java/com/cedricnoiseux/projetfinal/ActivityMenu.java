@@ -78,6 +78,7 @@ public class ActivityMenu extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+        SqlUtility.runTest();
     }
 
     public void showEvents() {

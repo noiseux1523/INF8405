@@ -12,14 +12,14 @@ public class SqlUtility {
     public static java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static void addParticipation(User u, Event e) {
-        String q = "INSERT INTO Participation (USERNAME, EVENTID) " +
+        String q = "INSERT INTO Participations (USERNAME, EVENTID) " +
                 "VALUES (" + u.email + ", " + Integer.valueOf(e.id).toString() + ")";
         SqlSet process = new SqlSet();
         process.execute(q);
     }
 
     public static void removeParticipation(User u, Event e) {
-        String q = "DELETE FROM Participation WHERE " +
+        String q = "DELETE FROM Participations WHERE " +
                 "USERNAME = " + u.email + " AND " +
                 "EVENTID = " + Integer.valueOf(e.id).toString() + ")";
         SqlSet process= new SqlSet();

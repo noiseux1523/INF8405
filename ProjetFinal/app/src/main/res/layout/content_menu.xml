@@ -26,6 +26,14 @@
         android:textSize="35dp"
         android:typeface="monospace" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="75dp"
+        android:background="@drawable/logo_small"
+        android:id="@+id/smash"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -44,7 +52,7 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="75dp"
             android:text="SHOW EVENTS"
             android:id="@+id/show"
             android:layout_centerVertical="true"
@@ -53,7 +61,8 @@
             android:textColor="#ffffff"
             android:textSize="25dp"
             android:textStyle="bold"
-            android:typeface="monospace" />
+            android:typeface="monospace"
+            android:background="@drawable/back_menu"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -65,7 +74,7 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="75dp"
             android:text="MANAGE EVENTS"
             android:id="@+id/manage"
             android:gravity="center"
@@ -74,7 +83,8 @@
             android:textStyle="bold"
             android:typeface="monospace"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/back_menu"/>
 
         <TextView
             android:layout_width="wrap_content"

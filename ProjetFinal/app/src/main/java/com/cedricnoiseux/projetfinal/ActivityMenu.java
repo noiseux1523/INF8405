@@ -48,7 +48,7 @@ public class ActivityMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        SqlUtility.runTest();
+        // SqlUtility.runTest();
 
         // Check permissions
         requestPermissions();
@@ -91,10 +91,12 @@ public class ActivityMenu extends AppCompatActivity {
                         switch (which) {
                             case 0:
                                 Intent intent = new Intent(getApplicationContext(), ActivityEventsList.class);
+                                intent.putExtra("user", mCredential.getSelectedAccountName());
                                 startActivity(intent);
                                 break;
                             case 1:
                                 Intent intent1 = new Intent(getApplicationContext(), ActivityGoogleMaps.class);
+                                intent1.putExtra("user", mCredential.getSelectedAccountName());
                                 startActivity(intent1);
                                 break;
                         }
@@ -105,6 +107,7 @@ public class ActivityMenu extends AppCompatActivity {
 
     public void manageEvents() {
         Intent intent = new Intent(this, ActivityManageEvent.class);
+        intent.putExtra("user", mCredential.getSelectedAccountName());
         startActivity(intent);
     }
 

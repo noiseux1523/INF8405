@@ -5,8 +5,13 @@ package com.cedricnoiseux.projetfinal;
  */
 public class User {
     public String email;
-    public String lastX;
-    public String lastY;
+    public float lastX;
+    public float lastY;
 
+    public User(String username) {
+        email = username;
+        lastX = 0;
+        lastY = 0;
+    }
 
 }

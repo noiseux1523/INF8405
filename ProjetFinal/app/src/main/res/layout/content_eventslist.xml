@@ -26,6 +26,25 @@
         android:textSize="35dp"
         android:typeface="monospace" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/menu"
+        android:layout_below="@+id/title"
+        android:id="@+id/scroll">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list"
+            android:layout_alignTop="@+id/scroll"
+            android:layout_toStartOf="@+id/menu"
+            android:layout_above="@+id/menu"
+            android:showDividers="end"></LinearLayout>
+    </ScrollView>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="50dp"

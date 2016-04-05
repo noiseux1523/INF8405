@@ -33,7 +33,7 @@ public class ActivityEventsList extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         String username = extras.getString("user");
-        User user = new User(username);
+        User user = new User(username, 0, 0);
 
         mMenu = (TextView) findViewById(R.id.menu);
         mMenu.setOnClickListener(new View.OnClickListener() {

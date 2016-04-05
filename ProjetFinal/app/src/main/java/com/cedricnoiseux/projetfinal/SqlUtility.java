@@ -1,6 +1,7 @@
 package com.cedricnoiseux.projetfinal;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -13,14 +14,22 @@ public class SqlUtility {
 
     public static void addParticipation(User u, Event e) {
         String q = "INSERT INTO Participations (USERNAME, EVENTID) " +
+<<<<<<< HEAD
                 "VALUES (" + u.email + ", " + Integer.valueOf(e.id).toString() + ")";
+=======
+                "VALUES ('" + u.email + "', " + Integer.valueOf(e.id).toString() + ")";
+>>>>>>> 22e8fa451870dbcef83a5698986f33e592c0c0a1
         SqlSet process = new SqlSet();
         process.execute(q);
     }
 
     public static void removeParticipation(User u, Event e) {
         String q = "DELETE FROM Participations WHERE " +
+<<<<<<< HEAD
                 "USERNAME = " + u.email + " AND " +
+=======
+                "USERNAME = '" + u.email + "' AND " +
+>>>>>>> 22e8fa451870dbcef83a5698986f33e592c0c0a1
                 "EVENTID = " + Integer.valueOf(e.id).toString() + ")";
         SqlSet process= new SqlSet();
         process.execute(q);
@@ -63,7 +72,7 @@ public class SqlUtility {
 
     public static LinkedList<Event> getParticipatingEvent(User u) throws Exception{
         String q = "SELECT ID, NAME, HOST, LOCATIONNAME, DATE, POSITIONX, POSITIONY " +
-                "FROM Events, Participations WHERE USERNAME = " + u.email + " AND EVENTID = ID";
+                "FROM Events, Participations WHERE USERNAME = '" + u.email + "' AND EVENTID = ID";
         SqlGet process = new SqlGet();
         process.execute(q);
         return process.get();
@@ -71,7 +80,7 @@ public class SqlUtility {
 
     public static LinkedList<Event> getCreatedEvents(User u) throws Exception{
         String q = "SELECT ID, NAME, HOST, LOCATIONNAME, DATE, POSITIONX, POSITIONY " +
-                "FROM Events WHERE HOST = " +u.email;
+                "FROM Events WHERE HOST = '" +u.email + "'";
         SqlGet process = new SqlGet();
         process.execute(q);
         return process.get();
@@ -89,19 +98,42 @@ public class SqlUtility {
         return ret;
     }
 
+    private static void printEvents(LinkedList<Event> l) {
+        for (int i = 0; i < l.size(); i++) {
+            Event o =  l.get(i);
+            System.out.println(o.name + " " + o.host);
+        }
+    }
+
     public static void runTest() {
-        Event e = new Event(-1, "rencontre", "clementgamache", "smashloft", new Date(), 1.2345F, 4.23452F);
+        User user1 = new User("user1", 0, 0);
+        User user2 = new User("user2", 0, 0);
+        User user3 = new User("user3", 0, 0);
+        User user4 = new User("user4", 0, 0);
+
+
 
         try {
-            addEvent(e);
-            LinkedList<Event> l = getAllEvents();
-            Event aChanger = l.getFirst();
-            aChanger.name = "partouse";
-            updateEvent(aChanger);
-            LinkedList<Event> l2 = getAllEvents();
-            for (Event ev : l2) {
-                System.out.println(ev.name);
-            }
+
+            LinkedList<Event> l1 = getAllEvents();
+            Event e1 = l1.get(0);
+            Event e2 = l1.get(1);
+            Event e3 = l1.get(2);
+            Event e4 = l1.get(3);
+            Event e5 = l1.getLast();
+            removeEvent(e1);
+            removeEvent(e5);
+
+
+
+            LinkedList<Event> l2 = getCreatedEvents(user1);
+            LinkedList<Event> l3 = getParticipatingEvent(user2);
+            System.out.println("all events");
+            printEvents(l1);
+            System.out.println("all events created by user1");
+            printEvents(l2);
+            System.out.println("all events user2 participates to");
+            printEvents(l3);
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());

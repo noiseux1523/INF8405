@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +30,7 @@ import java.util.Arrays;
 
 
 public class ActivityMenu extends AppCompatActivity {
+    // Google account variables
     GoogleAccountCredential mCredential;
     private TextView mOutputText; // Montre l'account ou les erreurs
     private TextView mShow;
@@ -78,7 +78,6 @@ public class ActivityMenu extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
-        SqlUtility.runTest();
     }
 
     public void showEvents() {
@@ -107,6 +106,9 @@ public class ActivityMenu extends AppCompatActivity {
     }
 
     public void manageEvents() {
+//        Intent intent = new Intent(this, AndroidFromLocation.class);
+//        startActivity(intent);
+
         Intent intent = new Intent(this, ActivityManageEvent.class);
         intent.putExtra("user", mCredential.getSelectedAccountName());
         startActivity(intent);

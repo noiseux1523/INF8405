@@ -11,11 +11,11 @@ public class Event {
     public String host;
     public String locationName;
     public Date date;
-    public float locX;
-    public float locY;
+    public double locX;
+    public double locY;
 
-
-    public Event(int i, String n, String h, String lN, java.util.Date d, float x, float y) {
+    // id = -1 when creating new event
+    public Event(int i, String n, String h, String lN, java.util.Date d, double x, double y) {
         id = i;
         name = n;
         host = h;
@@ -30,8 +30,8 @@ public class Event {
                 host + "', '" +
                 locationName + "', '" +
                 SqlUtility.sdf.format(date) + "', " +
-                Float.valueOf(locX).toString() + ", " +
-                Float.valueOf(locY).toString() + ")";
+                Double.valueOf(locX).toString() + ", " +
+                Double.valueOf(locY).toString() + ")";
     }
 
 }

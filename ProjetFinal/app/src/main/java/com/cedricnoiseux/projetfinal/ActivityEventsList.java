@@ -15,11 +15,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
-
-// TODO: Etre sur que le user est bel et bien ajouté à un event quand on clique dessus
-// TODO: Etre sur que les events sont verts/rouges quand on re ouvre la page
-
-
 public class ActivityEventsList extends AppCompatActivity {
     private TextView mMenu;
     private ScrollView mScroll;
@@ -73,7 +68,7 @@ public class ActivityEventsList extends AppCompatActivity {
             mParticipation.setText("Not Attending - Click to join");
             int i = 0;
             while (i < e2.size()) {
-                if (e2.get(i) == event) {
+                if (e2.get(i).id == event.id) {
                     mParticipation.setTextColor(Color.GREEN);
                     mParticipation.setText("Attending - Click to cancel");
                 }

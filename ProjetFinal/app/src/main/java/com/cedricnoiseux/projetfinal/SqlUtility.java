@@ -14,22 +14,14 @@ public class SqlUtility {
 
     public static void addParticipation(User u, Event e) {
         String q = "INSERT INTO Participations (USERNAME, EVENTID) " +
-<<<<<<< HEAD
-                "VALUES (" + u.email + ", " + Integer.valueOf(e.id).toString() + ")";
-=======
                 "VALUES ('" + u.email + "', " + Integer.valueOf(e.id).toString() + ")";
->>>>>>> 22e8fa451870dbcef83a5698986f33e592c0c0a1
         SqlSet process = new SqlSet();
         process.execute(q);
     }
 
     public static void removeParticipation(User u, Event e) {
         String q = "DELETE FROM Participations WHERE " +
-<<<<<<< HEAD
-                "USERNAME = " + u.email + " AND " +
-=======
                 "USERNAME = '" + u.email + "' AND " +
->>>>>>> 22e8fa451870dbcef83a5698986f33e592c0c0a1
                 "EVENTID = " + Integer.valueOf(e.id).toString() + ")";
         SqlSet process= new SqlSet();
         process.execute(q);
@@ -50,8 +42,8 @@ public class SqlUtility {
                 "Name = '" + e.name +
                 "', LOCATIONNAME = '" + e.locationName +
                 "', DATE = '" + sdf.format(e.date) +
-                "', POSITIONX = " + Float.valueOf(e.locX).toString() +
-                ", POSITIONY = " + Float.valueOf(e.locY).toString() +
+                "', POSITIONX = " + Double.valueOf(e.locX).toString() +
+                ", POSITIONY = " + Double.valueOf(e.locY).toString() +
                 "WHERE ID = " + Integer.valueOf(e.id).toString();
         SqlSet process= new SqlSet();
         process.execute(q);
@@ -92,7 +84,7 @@ public class SqlUtility {
         for (String eventString : eventStrings) {
             String[] tmp = eventString.split(";");
             if (tmp.length != 7) return ret;
-            Event newEvent = new Event(Integer.parseInt(tmp[0]), tmp[1], tmp[2], tmp[3], sdf.parse(tmp[4]), Float.parseFloat(tmp[5]), Float.parseFloat(tmp[6]));
+            Event newEvent = new Event(Integer.parseInt(tmp[0]), tmp[1], tmp[2], tmp[3], sdf.parse(tmp[4]), Double.parseDouble(tmp[5]), Double.parseDouble(tmp[6]));
             ret.add(newEvent);
         }
         return ret;

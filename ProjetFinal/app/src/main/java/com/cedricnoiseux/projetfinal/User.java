@@ -5,10 +5,10 @@ package com.cedricnoiseux.projetfinal;
  */
 public class User {
     public String email;
-    public float lastX;
-    public float lastY;
+    public double lastX;
+    public double lastY;
 
-    public User(String e, float x , float y) {
+    public User(String e, double x , double y) {
         email = e;
         lastX = x;
         lastY = y;

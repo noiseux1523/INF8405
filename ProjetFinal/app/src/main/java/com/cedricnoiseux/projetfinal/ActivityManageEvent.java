@@ -44,7 +44,6 @@ public class ActivityManageEvent extends AppCompatActivity {
     private int year;
     private int month;
     private int day;
-    static final int DATE_DIALOG_ID = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,6 @@ public class ActivityManageEvent extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-//        final User user = extras.getParcelable("user");
         String username = extras.getString("user");
         final User user = new User(username, 0, 0);
 

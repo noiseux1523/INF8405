@@ -38,8 +38,6 @@ public class ActivityMenu extends AppCompatActivity {
     private TextView mManage;
     ProgressDialog mProgress;
 
-//    public User user = new User("", 0, 0);
-
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -95,13 +93,11 @@ public class ActivityMenu extends AppCompatActivity {
                             case 0:
                                 Intent intent = new Intent(getApplicationContext(), ActivityEventsList.class);
                                 intent.putExtra("user", mCredential.getSelectedAccountName());
-//                                intent.putExtra("user", (Parcelable) user);
                                 startActivity(intent);
                                 break;
                             case 1:
                                 Intent intent1 = new Intent(getApplicationContext(), ActivityGoogleMaps.class);
                                 intent1.putExtra("user", mCredential.getSelectedAccountName());
-//                                intent1.putExtra("user",(Parcelable) user);
                                 startActivity(intent1);
                                 break;
                         }
@@ -111,9 +107,6 @@ public class ActivityMenu extends AppCompatActivity {
     }
 
     public void manageEvents() {
-//        Intent intent = new Intent(this, AndroidFromLocation.class);
-//        startActivity(intent);
-
         Intent intent = new Intent(this, ActivityManageEvent.class);
         intent.putExtra("user", mCredential.getSelectedAccountName());
         startActivity(intent);
@@ -227,8 +220,6 @@ public class ActivityMenu extends AppCompatActivity {
             // Internet connection
             if (isDeviceOnline()) {
                 mOutputText.setText(mCredential.getSelectedAccountName());
-//                if (user.email.equals(""))
-//                    user.email = mCredential.getSelectedAccountName();
             }
             // No connection
             else {

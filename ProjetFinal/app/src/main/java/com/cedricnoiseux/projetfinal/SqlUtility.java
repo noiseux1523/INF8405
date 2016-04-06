@@ -12,22 +12,22 @@ public class SqlUtility {
     public static String password = "y117746q";
     public static java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static void addParticipation(User u, Event e) {
+    public static void addParticipation(User u, Event e) { //tested and works
         String q = "INSERT INTO Participations (USERNAME, EVENTID) " +
                 "VALUES ('" + u.email + "', " + Integer.valueOf(e.id).toString() + ")";
         SqlSet process = new SqlSet();
         process.execute(q);
     }
 
-    public static void removeParticipation(User u, Event e) {
+    public static void removeParticipation(User u, Event e) { //tested and works (repaired
         String q = "DELETE FROM Participations WHERE " +
                 "USERNAME = '" + u.email + "' AND " +
-                "EVENTID = " + Integer.valueOf(e.id).toString() + ")";
+                "EVENTID = " + Integer.valueOf(e.id).toString();
         SqlSet process= new SqlSet();
         process.execute(q);
     }
 
-    public static void addEvent(Event e) throws Exception { //S'ASSURER QUE L'EVENEMENT AIT UN ID DE -1
+    public static void addEvent(Event e) throws Exception { //S'ASSURER QUE L'EVENEMENT AIT UN ID DE -1. Tested and works
         if (e.id != -1) {
             throw new Exception("This event is not new");
         }
@@ -37,7 +37,7 @@ public class SqlUtility {
         SqlSet process= new SqlSet();
         process.execute(q);
     }
-    public static void updateEvent(Event e) {
+    public static void updateEvent(Event e) { //tested and works
         String q = "UPDATE Events SET " +
                 "Name = '" + e.name +
                 "', LOCATIONNAME = '" + e.locationName +
@@ -49,7 +49,7 @@ public class SqlUtility {
         process.execute(q);
     }
 
-    public static void removeEvent(Event e) {
+    public static void removeEvent(Event e) { //tested and works
         String q = "DELETE FROM Events WHERE ID = " + Integer.valueOf(e.id).toString();
         SqlSet process= new SqlSet();
         process.execute(q);
@@ -93,7 +93,7 @@ public class SqlUtility {
     private static void printEvents(LinkedList<Event> l) {
         for (int i = 0; i < l.size(); i++) {
             Event o =  l.get(i);
-            System.out.println(o.name + " " + o.host);
+            System.out.println(o.name + " " + o.date.toString());
         }
     }
 

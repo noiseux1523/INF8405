@@ -346,21 +346,13 @@ public class ActivityManageEvent extends AppCompatActivity {
                                 String location = eventLocation.getText().toString();
                                 event.locationName = location;
                                 String sDate =
-                                        eventDatePicker.getYear() + "-" +
-                                        eventDatePicker.getMonth() + "-" +
+                                        eventDatePicker.getYear() -3+ "-" +
+                                        eventDatePicker.getMonth()+1 + "-" +
                                         eventDatePicker.getDayOfMonth() + " " +
                                         eventTimePicker.getHour() + ":" +
                                         eventTimePicker.getMinute();
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                                 event.date = sdf.parse(sDate);
-                                Date dateOfEvent = new Date();
-                                dateOfEvent.setHours(eventTimePicker.getCurrentHour());
-                                dateOfEvent.setMinutes(eventTimePicker.getCurrentMinute());
-                                dateOfEvent.setSeconds(0);
-                                dateOfEvent.setDate(eventDatePicker.getDayOfMonth());
-                                dateOfEvent.setMonth(eventDatePicker.getMonth());
-                                dateOfEvent.setYear(eventDatePicker.getYear() - 1900);
-                                event.date = dateOfEvent;
                                 List<Address> adresse = geocoder.getFromLocationName(location, 1);
                                 event.locX = adresse.get(0).getLatitude();
                                 event.locY = adresse.get(0).getLongitude();

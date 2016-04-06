@@ -27,6 +27,7 @@ public class ActivityEventsList extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+//        User user = extras.getParcelable("user");
         String username = extras.getString("user");
         User user = new User(username, 0, 0);
 
@@ -87,6 +88,7 @@ public class ActivityEventsList extends AppCompatActivity {
                     + " ON " + date + "\n"
                     + " AT " + event.locationName;
             mOutput.setText(info);
+            mOutput.setLineSpacing(0.0f, 1.15f);
             mOutput.setTextColor(Color.WHITE);
             mOutput.setTypeface(null, Typeface.BOLD);
             mOutput.setGravity(Gravity.CENTER);

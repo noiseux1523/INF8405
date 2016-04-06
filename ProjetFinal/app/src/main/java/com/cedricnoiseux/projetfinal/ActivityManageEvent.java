@@ -8,18 +8,23 @@ import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +40,12 @@ public class ActivityManageEvent extends AppCompatActivity {
     private ScrollView mScroll;
     Geocoder geocoder;
 
+    // private DatePicker mDP;
+    private int year;
+    private int month;
+    private int day;
+    static final int DATE_DIALOG_ID = 999;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +53,7 @@ public class ActivityManageEvent extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+//        final User user = extras.getParcelable("user");
         String username = extras.getString("user");
         final User user = new User(username, 0, 0);
 
@@ -118,6 +130,7 @@ public class ActivityManageEvent extends AppCompatActivity {
         eventNameTitle.setText("Name");
         eventNameTitle.setTextSize(16);
         eventNameTitle.setPadding(0, 15, 0, 0);
+        eventNameTitle.setGravity(Gravity.CENTER);
         layout.addView(eventNameTitle);
 
         final EditText eventName = new EditText(this);
@@ -129,22 +142,44 @@ public class ActivityManageEvent extends AppCompatActivity {
         eventLocationTitle.setText("Location (Adress, City, Country, Zip Code)");
         eventLocationTitle.setTextSize(16);
         eventLocationTitle.setPadding(0, 15, 0, 0);
+        eventLocationTitle.setGravity(Gravity.CENTER);
         layout.addView(eventLocationTitle);
 
         final EditText eventLocation = new EditText(this);
         eventLocation.setTextSize(16);
         layout.addView(eventLocation);
 
+        // Event Time
+        TextView eventTimeTitle = new TextView(this);
+        eventTimeTitle.setText("Time");
+        eventTimeTitle.setTextSize(16);
+        eventTimeTitle.setPadding(0, 15, 0, 0);
+        eventTimeTitle.setGravity(Gravity.CENTER);
+        layout.addView(eventTimeTitle);
+
+        LayoutInflater inflaterTime = LayoutInflater.from(this);
+        final TimePicker eventTimePicker = (TimePicker)inflaterTime.inflate(R.xml.timepicker, null);
+        eventTimePicker.setIs24HourView(true);
+        layout.addView(eventTimePicker);
+
         // Event Date
         TextView eventDateTitle = new TextView(this);
-        eventDateTitle.setText("Date (MM/dd/yyyy hh:mm)");
+        eventDateTitle.setText("Date");
         eventDateTitle.setTextSize(16);
         eventDateTitle.setPadding(0, 15, 0, 0);
+        eventDateTitle.setGravity(Gravity.CENTER);
         layout.addView(eventDateTitle);
 
-        final EditText eventDate = new EditText(this);
-        eventDate.setTextSize(16);
-        layout.addView(eventDate);
+        LayoutInflater inflaterDate = LayoutInflater.from(this);
+        final DatePicker eventDatePicker = (DatePicker)inflaterDate.inflate(R.xml.datepicker, null);
+        final Calendar c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        eventDatePicker.init(year, month, day, null);
+        eventDatePicker.setCalendarViewShown(false);
+        eventDatePicker.setSpinnersShown(true);
+        layout.addView(eventDatePicker);
 
         dialog.setView(layout);
 
@@ -157,12 +192,13 @@ public class ActivityManageEvent extends AppCompatActivity {
                     String name = eventName.getText().toString();
                     String host = user.email;
                     String location = eventLocation.getText().toString();
-                    String[] separated = eventDate.getText().toString().split(" ");
-                    String[] day = separated[0].split("/");
-                    String[] time = separated[1].split(":");
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String dateParse = day[2] + "-" + day[0] + "-" + day[1] + " " + time[0] + ":" + time[1] + ":" + "00";
-                    Date dateOfEvent = sdf.parse(dateParse);
+                    Date dateOfEvent = new Date();
+                    dateOfEvent.setHours(eventTimePicker.getCurrentHour());
+                    dateOfEvent.setMinutes(eventTimePicker.getCurrentMinute());
+                    dateOfEvent.setSeconds(0);
+                    dateOfEvent.setDate(eventDatePicker.getDayOfMonth());
+                    dateOfEvent.setMonth(eventDatePicker.getMonth());
+                    dateOfEvent.setYear(eventDatePicker.getYear() - 1900);
                     List<Address> adresse = geocoder.getFromLocationName(location, 1);
                     double latitude = adresse.get(0).getLatitude();
                     double longitude = adresse.get(0).getLongitude();
@@ -217,6 +253,7 @@ public class ActivityManageEvent extends AppCompatActivity {
                     + " ON " + date + "\n"
                     + " AT " + event.locationName;
             mOutput.setText(info);
+            mOutput.setLineSpacing(0.0f, 1.15f);
             mOutput.setTextColor(Color.WHITE);
             mOutput.setTypeface(null, Typeface.BOLD);
             mOutput.setGravity(Gravity.CENTER);
@@ -229,8 +266,9 @@ public class ActivityManageEvent extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // WINDOW TO EDIT
+                    // Create event window
                     AlertDialog.Builder dialog = new AlertDialog.Builder(ActivityManageEvent.this);
-                    dialog.setTitle("Edit Event (Follow Formats)");
+                    dialog.setTitle("Event Information (Follow Formats)");
                     LinearLayout layout = new LinearLayout(ActivityManageEvent.this);
                     layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -239,6 +277,7 @@ public class ActivityManageEvent extends AppCompatActivity {
                     eventNameTitle.setText("Name");
                     eventNameTitle.setTextSize(16);
                     eventNameTitle.setPadding(0, 15, 0, 0);
+                    eventNameTitle.setGravity(Gravity.CENTER);
                     layout.addView(eventNameTitle);
 
                     final EditText eventName = new EditText(ActivityManageEvent.this);
@@ -251,6 +290,7 @@ public class ActivityManageEvent extends AppCompatActivity {
                     eventLocationTitle.setText("Location (Adress, City, Country, Zip Code)");
                     eventLocationTitle.setTextSize(16);
                     eventLocationTitle.setPadding(0, 15, 0, 0);
+                    eventLocationTitle.setGravity(Gravity.CENTER);
                     layout.addView(eventLocationTitle);
 
                     final EditText eventLocation = new EditText(ActivityManageEvent.this);
@@ -258,19 +298,35 @@ public class ActivityManageEvent extends AppCompatActivity {
                     eventLocation.setText(event.locationName);
                     layout.addView(eventLocation);
 
+                    // Event Time
+                    TextView eventTimeTitle = new TextView(ActivityManageEvent.this);
+                    eventTimeTitle.setText("Time");
+                    eventTimeTitle.setTextSize(16);
+                    eventTimeTitle.setPadding(0, 15, 0, 0);
+                    eventTimeTitle.setGravity(Gravity.CENTER);
+                    layout.addView(eventTimeTitle);
+
+                    LayoutInflater inflaterTime = LayoutInflater.from(ActivityManageEvent.this);
+                    final TimePicker eventTimePicker = (TimePicker)inflaterTime.inflate(R.xml.timepicker, null);
+                    eventTimePicker.setIs24HourView(true);
+                    eventTimePicker.setCurrentHour(event.date.getHours());
+                    eventTimePicker.setCurrentMinute(event.date.getMinutes());
+                    layout.addView(eventTimePicker);
+
                     // Event Date
                     TextView eventDateTitle = new TextView(ActivityManageEvent.this);
-                    eventDateTitle.setText("Date (MM/dd/yyyy hh:mm)");
+                    eventDateTitle.setText("Date");
                     eventDateTitle.setTextSize(16);
                     eventDateTitle.setPadding(0, 15, 0, 0);
+                    eventDateTitle.setGravity(Gravity.CENTER);
                     layout.addView(eventDateTitle);
 
-                    final EditText eventDate = new EditText(ActivityManageEvent.this);
-                    eventDate.setTextSize(16);
-                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
-                    String date = format.format(event.date);
-                    eventDate.setText(date);
-                    layout.addView(eventDate);
+                    LayoutInflater inflaterDate = LayoutInflater.from(ActivityManageEvent.this);
+                    final DatePicker eventDatePicker = (DatePicker)inflaterDate.inflate(R.xml.datepicker, null);
+                    eventDatePicker.init(event.date.getYear(), event.date.getMonth(), event.date.getDay(), null);
+                    eventDatePicker.setCalendarViewShown(false);
+                    eventDatePicker.setSpinnersShown(true);
+                    layout.addView(eventDatePicker);
 
                     // Display the window
                     dialog.setView(layout);
@@ -283,12 +339,13 @@ public class ActivityManageEvent extends AppCompatActivity {
                                 event.name = eventName.getText().toString();
                                 String location = eventLocation.getText().toString();
                                 event.locationName = location;
-                                String[] separated = eventDate.getText().toString().split(" ");
-                                String[] day = separated[0].split("/");
-                                String[] time = separated[1].split(":");
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String dateParse = day[2] + "-" + day[0] + "-" + day[1] + " " + time[0] + ":" + time[1] + ":" + "00";
-                                Date dateOfEvent = sdf.parse(dateParse);
+                                Date dateOfEvent = new Date();
+                                dateOfEvent.setHours(eventTimePicker.getCurrentHour());
+                                dateOfEvent.setMinutes(eventTimePicker.getCurrentMinute());
+                                dateOfEvent.setSeconds(0);
+                                dateOfEvent.setDate(eventDatePicker.getDayOfMonth());
+                                dateOfEvent.setMonth(eventDatePicker.getMonth());
+                                dateOfEvent.setYear(eventDatePicker.getYear() - 1900);
                                 event.date = dateOfEvent;
                                 List<Address> adresse = geocoder.getFromLocationName(location, 1);
                                 event.locX = adresse.get(0).getLatitude();

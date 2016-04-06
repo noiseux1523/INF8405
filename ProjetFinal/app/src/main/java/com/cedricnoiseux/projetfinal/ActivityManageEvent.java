@@ -306,11 +306,14 @@ public class ActivityManageEvent extends AppCompatActivity {
                     eventTimeTitle.setGravity(Gravity.CENTER);
                     layout.addView(eventTimeTitle);
 
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(event.date);
                     LayoutInflater inflaterTime = LayoutInflater.from(ActivityManageEvent.this);
                     final TimePicker eventTimePicker = (TimePicker)inflaterTime.inflate(R.xml.timepicker, null);
                     eventTimePicker.setIs24HourView(true);
-                    eventTimePicker.setCurrentHour(event.date.getHours());
-                    eventTimePicker.setCurrentMinute(event.date.getMinutes());
+                    eventTimePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
+                    eventTimePicker.setMinute(cal.get(Calendar.MINUTE));
                     layout.addView(eventTimePicker);
 
                     // Event Date
@@ -323,9 +326,9 @@ public class ActivityManageEvent extends AppCompatActivity {
 
                     LayoutInflater inflaterDate = LayoutInflater.from(ActivityManageEvent.this);
                     final DatePicker eventDatePicker = (DatePicker)inflaterDate.inflate(R.xml.datepicker, null);
-                    int eYear = event.date.getYear() + 1900;
-                    int eMonth = event.date.getMonth();
-                    int eDay = event.date.getDate();
+                    int eYear = cal.get(Calendar.YEAR);
+                    int eMonth = cal.get(Calendar.MONTH);
+                    int eDay = cal.get(Calendar.DAY_OF_MONTH);
                     eventDatePicker.init(eYear, eMonth, eDay, null);
                     eventDatePicker.setCalendarViewShown(false);
                     eventDatePicker.setSpinnersShown(true);
@@ -342,6 +345,14 @@ public class ActivityManageEvent extends AppCompatActivity {
                                 event.name = eventName.getText().toString();
                                 String location = eventLocation.getText().toString();
                                 event.locationName = location;
+                                String sDate =
+                                        eventDatePicker.getYear() + "-" +
+                                        eventDatePicker.getMonth() + "-" +
+                                        eventDatePicker.getDayOfMonth() + " " +
+                                        eventTimePicker.getHour() + ":" +
+                                        eventTimePicker.getMinute();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                event.date = sdf.parse(sDate);
                                 Date dateOfEvent = new Date();
                                 dateOfEvent.setHours(eventTimePicker.getCurrentHour());
                                 dateOfEvent.setMinutes(eventTimePicker.getCurrentMinute());

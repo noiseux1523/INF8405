@@ -323,7 +323,10 @@ public class ActivityManageEvent extends AppCompatActivity {
 
                     LayoutInflater inflaterDate = LayoutInflater.from(ActivityManageEvent.this);
                     final DatePicker eventDatePicker = (DatePicker)inflaterDate.inflate(R.xml.datepicker, null);
-                    eventDatePicker.init(event.date.getYear(), event.date.getMonth(), event.date.getDay(), null);
+                    int eYear = event.date.getYear() + 1900;
+                    int eMonth = event.date.getMonth();
+                    int eDay = event.date.getDate();
+                    eventDatePicker.init(eYear, eMonth, eDay, null);
                     eventDatePicker.setCalendarViewShown(false);
                     eventDatePicker.setSpinnersShown(true);
                     layout.addView(eventDatePicker);

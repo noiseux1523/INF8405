@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -33,7 +35,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
@@ -45,12 +49,37 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(){
+            myContentsView = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
+            tvTitle.setText(marker.getTitle());
+            TextView tvSnippet = ((TextView)myContentsView.findViewById(R.id.snippet));
+            tvSnippet.setText(marker.getSnippet());
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    }
+
+    private User user = new User("", 0, 0);
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 10000; /* 10 secs */
+    private long UPDATE_INTERVAL = 120000;  /* 120 secs */
+    private long FASTEST_INTERVAL = 60000; /* 60 secs */
 
     /*
      * Define a request code to send to Google Play services This code is
@@ -66,6 +95,11 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_google_maps);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        String username = extras.getString("user");
+        user.email = username;
 
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
@@ -91,6 +125,7 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
             // MapActivity is ready
             Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
             ActivityGoogleMapsPermissionsDispatcher.getMyLocationWithCheck(this);
+            map.setInfoWindowAdapter(new MyInfoWindowAdapter());
         } else {
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
@@ -213,15 +248,36 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
         // Display the connection status
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location != null) {
+            // Get user location
             Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            // Show marker if not loading application for the first time
+            user.lastX = location.getLatitude();
+            user.lastY = location.getLongitude();
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
-                    .title("User");
+                    .title("You are here!");
             map.addMarker(options);
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
             map.animateCamera(cameraUpdate);
+
+            // Get event locations
+            LinkedList<Event> events = null;
+            try {
+                events = SqlUtility.getAllEvents();
+                for (Event e : events){
+                    LatLng latLngEvent = new LatLng(e.locX, e.locY);
+                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
+                    String date = format.format(e.date);
+                    String info = " ON " + date + "\n" + " AT " + e.locationName;
+                    MarkerOptions optionsEvent = new MarkerOptions()
+                            .position(latLngEvent)
+                            .title(e.name.toUpperCase())
+                            .snippet(info);
+                    map.addMarker(optionsEvent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
         }
@@ -245,16 +301,42 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
      * @param location
      */
     public void onLocationChanged(Location location) {
-        // Report to the UI that the location was updated
+        // Report to the UI that the location was updated and clear map
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         map.clear();
-        map.addMarker(new MarkerOptions()
+
+        // Get user location
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        user.lastX = location.getLatitude();
+        user.lastY = location.getLongitude();
+        MarkerOptions options = new MarkerOptions()
                 .position(latLng)
-                .title("User"));
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                .title("You are here!");
+        map.addMarker(options);
+
+        // Get event locations
+        LinkedList<Event> events = null;
+        try {
+            events = SqlUtility.getAllEvents();
+            for (Event e : events){
+                LatLng latLngEvent = new LatLng(e.locX, e.locY);
+                SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
+                String date = format.format(e.date);
+                String info = " ON " + date + "\n" + " AT " + e.locationName;
+                MarkerOptions optionsEvent = new MarkerOptions()
+                        .position(latLngEvent)
+                        .title(e.name.toUpperCase())
+                        .snippet(info)
+                        .visible(true);
+                map.addMarker(optionsEvent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /*

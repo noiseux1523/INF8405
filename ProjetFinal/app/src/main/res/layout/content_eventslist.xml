@@ -11,7 +11,24 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ActivityEventsList"
     tools:showIn="@layout/activity_eventslist"
-    android:background="@drawable/smash">
+    android:background="@drawable/smash"
+    android:id="@+id/main">
+
+    <ImageView
+        android:id="@+id/imageDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHeading"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp"
+        android:text="Heading: 0.0" />
 
     <TextView
         android:layout_width="fill_parent"

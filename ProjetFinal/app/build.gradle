@@ -7,7 +7,10 @@ android {
 
     defaultConfig {
         applicationId "com.cedricnoiseux.projetfinal"
-        minSdkVersion 18
+        //
+        // NE PAS OUBLIER DE REMETTRE A 18
+        //
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

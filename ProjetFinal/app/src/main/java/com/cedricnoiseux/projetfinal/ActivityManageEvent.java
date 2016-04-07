@@ -1,5 +1,6 @@
 package com.cedricnoiseux.projetfinal;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -198,6 +201,17 @@ public class ActivityManageEvent extends AppCompatActivity {
                     dateOfEvent.setMonth(eventDatePicker.getMonth());
                     dateOfEvent.setYear(eventDatePicker.getYear() - 1900);
                     List<Address> adresse = geocoder.getFromLocationName(location, 1);
+                    if (adresse.size() == 0) {
+                        Toast toast1 = Toast.makeText(ActivityManageEvent.this,
+                                "The format of the location was not followed", Toast.LENGTH_LONG);
+                        Toast toast2 = Toast.makeText(ActivityManageEvent.this,
+                                "Or the location could not be found.", Toast.LENGTH_LONG);
+                        Toast toast3 = Toast.makeText(ActivityManageEvent.this,
+                                "Try again!", Toast.LENGTH_LONG);
+                        toast1.show();
+                        toast2.show();
+                        toast3.show();
+                    }
                     double latitude = adresse.get(0).getLatitude();
                     double longitude = adresse.get(0).getLongitude();
 
@@ -244,7 +258,7 @@ public class ActivityManageEvent extends AppCompatActivity {
             mEdit.setPadding(0, 20, 0, 10);
 
             // Set event information
-            SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String date = format.format(event.date);
             String info = event.name.toUpperCase() + "\n"
                     + " HOSTED BY " + event.host + "\n"
@@ -261,6 +275,7 @@ public class ActivityManageEvent extends AppCompatActivity {
 
             // Set onClickListener
             mOutput.setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View v) {
                     // WINDOW TO EDIT
@@ -293,6 +308,7 @@ public class ActivityManageEvent extends AppCompatActivity {
 
                     final EditText eventLocation = new EditText(ActivityManageEvent.this);
                     eventLocation.setTextSize(16);
+                    final String initialLocationName = event.locationName;
                     eventLocation.setText(event.locationName);
                     layout.addView(eventLocation);
 
@@ -304,14 +320,13 @@ public class ActivityManageEvent extends AppCompatActivity {
                     eventTimeTitle.setGravity(Gravity.CENTER);
                     layout.addView(eventTimeTitle);
 
-
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(event.date);
                     LayoutInflater inflaterTime = LayoutInflater.from(ActivityManageEvent.this);
                     final TimePicker eventTimePicker = (TimePicker)inflaterTime.inflate(R.xml.timepicker, null);
                     eventTimePicker.setIs24HourView(true);
-                    eventTimePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
-                    eventTimePicker.setMinute(cal.get(Calendar.MINUTE));
+                    eventTimePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+                    eventTimePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
                     layout.addView(eventTimePicker);
 
                     // Event Date
@@ -343,15 +358,30 @@ public class ActivityManageEvent extends AppCompatActivity {
                                 event.name = eventName.getText().toString();
                                 String location = eventLocation.getText().toString();
                                 event.locationName = location;
+                                int updateYear = eventDatePicker.getYear();
+                                int updateMonth = eventDatePicker.getMonth() + 1;
+                                int updateDay = eventDatePicker.getDayOfMonth();
                                 String sDate =
-                                        eventDatePicker.getYear() -3+ "-" +
-                                        eventDatePicker.getMonth()+1 + "-" +
-                                        eventDatePicker.getDayOfMonth() + " " +
-                                        eventTimePicker.getHour() + ":" +
-                                        eventTimePicker.getMinute();
+                                        updateYear + "-" +
+                                        updateMonth + "-" +
+                                        updateDay + " " +
+                                        eventTimePicker.getCurrentHour() + ":" +
+                                        eventTimePicker.getCurrentMinute();
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                                 event.date = sdf.parse(sDate);
                                 List<Address> adresse = geocoder.getFromLocationName(location, 1);
+                                if (adresse.size() == 0) {
+                                    eventLocation.setText(initialLocationName);
+                                    Toast toast1 = Toast.makeText(ActivityManageEvent.this,
+                                            "The format of the location was not followed", Toast.LENGTH_LONG);
+                                    Toast toast2 = Toast.makeText(ActivityManageEvent.this,
+                                            "Or the location could not be found.", Toast.LENGTH_LONG);
+                                    Toast toast3 = Toast.makeText(ActivityManageEvent.this,
+                                            "Try again!", Toast.LENGTH_LONG);
+                                    toast1.show();
+                                    toast2.show();
+                                    toast3.show();
+                                }
                                 event.locX = adresse.get(0).getLatitude();
                                 event.locY = adresse.get(0).getLongitude();
 

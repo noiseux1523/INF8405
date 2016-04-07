@@ -4,21 +4,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
+import java.util.List;
 
-public class ActivityEventsList extends AppCompatActivity {
+// Quand on pese sur le bouton de compas, l`image apparait et les events disparaissent
+// avec removeAllViews du layout ou de quoi. On donne l'option de quand on clique sur le compas
+// le compas disparait et les events re-apparaissent avec getAllEvents. À voir, on veut pointer vers les events ou
+// juste le nord?
+
+public class ActivityEventsList extends AppCompatActivity implements SensorEventListener {
     private TextView mMenu;
     private ScrollView mScroll;
     private LinearLayout mList;
+    private RelativeLayout mMain;
+    private ImageView mPointer;
+    private TextView tvHeading;
+
+    private SensorManager mSensorManager;
+    private Sensor mCompass;
+    private Sensor mAccelerometer;
+    private Sensor mMagnetometer;
+    private Sensor mMagnet;
+    private float[] mLastAccelerometer = new float[3];
+    private float[] mLastMagnetometer = new float[3];
+    private boolean mLastAccelerometerSet = false;
+    private boolean mLastMagnetometerSet = false;
+    private float[] mR = new float[9];
+    private float[] mOrientation = new float[3];
+    private float mCurrentDegree = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +69,24 @@ public class ActivityEventsList extends AppCompatActivity {
         });
         mScroll = (ScrollView) findViewById(R.id.scroll);
         mList = (LinearLayout) findViewById(R.id.list);
+        mMain = (RelativeLayout) findViewById(R.id.main);
+        mPointer = (ImageView) findViewById(R.id.imageDisplay);
+        tvHeading = (TextView) findViewById(R.id.tvHeading);
+
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mCompass = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        mMagnet = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        List<Sensor> msensorlist = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+        String sSensList = new String("");
+        Sensor tmp;
+        int x,i;
+        for (i=0;i<msensorlist.size();i++){
+            tmp = msensorlist.get(i);
+            sSensList = " "+sSensList+tmp.getName(); // Add the sensor name to the string of sensors available
+        }
+        tvHeading.setText(sSensList);
+//        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         // Search and show all events
         try {
@@ -65,12 +113,12 @@ public class ActivityEventsList extends AppCompatActivity {
 
             // Set participation or not
             mParticipation.setTextColor(Color.RED);
-            mParticipation.setText("Not Attending - Click to join");
+            mParticipation.setText("Not Attending - Click to interact");
             int i = 0;
             while (i < e2.size()) {
                 if (e2.get(i).id == event.id) {
                     mParticipation.setTextColor(Color.GREEN);
-                    mParticipation.setText("Attending - Click to cancel");
+                    mParticipation.setText("Attending - Click to interact");
                 }
                 i++;
             }
@@ -93,7 +141,7 @@ public class ActivityEventsList extends AppCompatActivity {
             mOutput.setGravity(Gravity.CENTER);
             mOutput.setTextSize(18);
             mOutput.setPadding(0, 0, 0, 10);
-            if (mParticipation.getText() == "Not Attending - Click to join") {
+            if (mParticipation.getText() == "Not Attending - Click to interact") {
                 mOutput.setBackgroundResource(R.drawable.back_red);
             } else {
                 mOutput.setBackgroundResource(R.drawable.back_green);
@@ -104,17 +152,20 @@ public class ActivityEventsList extends AppCompatActivity {
             mOutput.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mParticipation.getCurrentTextColor() == Color.RED) {
-                        SqlUtility.addParticipation(user, event);
-                        mParticipation.setTextColor(Color.GREEN);
-                        mParticipation.setText("Attending - Click to cancel");
-                        mOutput.setBackgroundResource(R.drawable.back_green);
-                    } else {
-                        SqlUtility.removeParticipation(user, event);
-                        mParticipation.setTextColor(Color.RED);
-                        mParticipation.setText("Not Attending - Click to join");
-                        mOutput.setBackgroundResource(R.drawable.back_red);
-                    }
+
+
+
+//                    if (mParticipation.getCurrentTextColor() == Color.RED) {
+//                        SqlUtility.addParticipation(user, event);
+//                        mParticipation.setTextColor(Color.GREEN);
+//                        mParticipation.setText("Attending - Click to interact");
+//                        mOutput.setBackgroundResource(R.drawable.back_green);
+//                    } else {
+//                        SqlUtility.removeParticipation(user, event);
+//                        mParticipation.setTextColor(Color.RED);
+//                        mParticipation.setText("Not Attending - Click to interact");
+//                        mOutput.setBackgroundResource(R.drawable.back_red);
+//                    }
                 }
             });
 
@@ -124,6 +175,77 @@ public class ActivityEventsList extends AppCompatActivity {
         }
     }
 
+    protected void onResume() {
+        super.onResume();
+//      mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+//      mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_GAME);
+//      mPointer.setImageResource(R.drawable.pointer);
+        mSensorManager.registerListener(this, mCompass, SensorManager.SENSOR_DELAY_GAME);
+        mPointer.setImageResource(R.drawable.pointer);
+    }
+
+    protected void onPause() {
+        super.onPause();
+//      mSensorManager.unregisterListener(this, mAccelerometer);
+//      mSensorManager.unregisterListener(this, mMagnetometer);
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // get the angle around the z-axis rotated
+        float degree = Math.round(event.values[0]);
+
+        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+
+        // create a rotation animation (reverse turn degree degrees)
+        RotateAnimation ra = new RotateAnimation(
+                mCurrentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+
+        // set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+
+        // Start the animation
+        mPointer.startAnimation(ra);
+        mCurrentDegree = -degree;
+
+//        if (event.sensor == mAccelerometer) {
+//            System.arraycopy(event.values, 0, mLastAccelerometer, 0, event.values.length);
+//            mLastAccelerometerSet = true;
+//        }
+//        if (event.sensor == mMagnetometer) {
+//            System.arraycopy(event.values, 0, mLastMagnetometer, 0, event.values.length);
+//            mLastMagnetometerSet = true;
+//        }
+//        if (mLastAccelerometerSet && mLastMagnetometerSet) {
+//            SensorManager.getRotationMatrix(mR, null, mLastAccelerometer, mLastMagnetometer);
+//            SensorManager.getOrientation(mR, mOrientation);
+//            float azimuthInRadians = mOrientation[0];
+//            float azimuthInDegress = (float)(Math.toDegrees(azimuthInRadians)+360)%360;
+//            RotateAnimation ra = new RotateAnimation(
+//                    mCurrentDegree,
+//                    -azimuthInDegress,
+//                    Animation.RELATIVE_TO_SELF, 0.5f,
+//                    Animation.RELATIVE_TO_SELF, 0.5f);
+//
+//            ra.setDuration(250);
+//            ra.setFillAfter(true);
+//            mPointer.startAnimation(ra);
+//            mCurrentDegree = -azimuthInDegress;
+//        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
 
 /*

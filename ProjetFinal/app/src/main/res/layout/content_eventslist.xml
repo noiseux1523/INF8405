@@ -16,19 +16,22 @@
 
     <ImageView
         android:id="@+id/imageDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHeading"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true" />
 
     <TextView
-        android:id="@+id/tvHeading"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="20dp"
-        android:text="Heading: 0.0" />
+        android:layout_height="50dp"
+        android:text="DISMISS"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:id="@+id/dismiss"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="fill_parent"

@@ -122,7 +122,8 @@ public class ActivityManageEvent extends AppCompatActivity {
     public void createEvent(final User user) {
         // Create event window
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Event Information (Follow Formats)");
+        dialog.setTitle("Event Information");
+        ScrollView scroll = new ScrollView(this);
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -182,7 +183,8 @@ public class ActivityManageEvent extends AppCompatActivity {
         eventDatePicker.setSpinnersShown(true);
         layout.addView(eventDatePicker);
 
-        dialog.setView(layout);
+        scroll.addView(layout);
+        dialog.setView(scroll);
 
         dialog.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
@@ -281,7 +283,8 @@ public class ActivityManageEvent extends AppCompatActivity {
                     // WINDOW TO EDIT
                     // Create event window
                     AlertDialog.Builder dialog = new AlertDialog.Builder(ActivityManageEvent.this);
-                    dialog.setTitle("Event Information (Follow Formats)");
+                    dialog.setTitle("Event Information");
+                    ScrollView scroll = new ScrollView(ActivityManageEvent.this);
                     LinearLayout layout = new LinearLayout(ActivityManageEvent.this);
                     layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -348,7 +351,8 @@ public class ActivityManageEvent extends AppCompatActivity {
                     layout.addView(eventDatePicker);
 
                     // Display the window
-                    dialog.setView(layout);
+                    scroll.addView(layout);
+                    dialog.setView(scroll);
 
                     dialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         @Override

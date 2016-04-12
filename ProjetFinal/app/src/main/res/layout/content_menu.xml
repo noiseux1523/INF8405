@@ -28,7 +28,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="90dp"
+        android:layout_height="80dp"
         android:background="@drawable/logo_small"
         android:id="@+id/smash"
         android:layout_centerHorizontal="true"
@@ -52,7 +52,7 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="90dp"
+            android:layout_height="80dp"
             android:text="SHOW EVENTS"
             android:id="@+id/show"
             android:layout_centerVertical="true"
@@ -74,7 +74,7 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="90dp"
+            android:layout_height="80dp"
             android:text="MANAGE EVENTS"
             android:id="@+id/manage"
             android:gravity="center"

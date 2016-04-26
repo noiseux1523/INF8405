@@ -305,12 +305,14 @@ public class ActivityEventsList extends AppCompatActivity implements
 
     @Override
     public void onProviderEnabled(String provider) {
-
+        Toast.makeText(ActivityEventsList.this,
+                provider + " is enabled", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        Toast.makeText(ActivityEventsList.this,
+                provider + " is disabled", Toast.LENGTH_LONG).show();
     }
 }
 

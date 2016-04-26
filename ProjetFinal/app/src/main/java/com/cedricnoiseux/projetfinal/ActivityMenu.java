@@ -38,6 +38,7 @@ public class ActivityMenu extends AppCompatActivity {
     private TextView mOutputText; // Montre l'account ou les erreurs
     private TextView mShow;
     private TextView mManage;
+    public Thread battery;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -81,28 +82,44 @@ public class ActivityMenu extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
-                
-                
-                  (new Thread(new Runnable(){
+
+
+        battery = new Thread(new Runnable() {
             @Override
-            public void run(){
-                while (!Thread.interrupted())
-                    try{
-                        Thread.sleep(300000);
-                        runOnUiThread(new Runnable(){
+            public void run() {
+                final float[] batt_used = {0};
+                final float[] batt = {getBatteryLevel(), getBatteryLevel()};
+                while (!battery.isInterrupted()) {
+                    try {
+                        battery.sleep(60 * 1000);
+                        runOnUiThread(new Runnable() {
                             @Override
-                            public void run(){
-                                batt_start=getBatteryLevel();
-                                Toast.makeText(getApplicationContext(),"battery is level: "+batt_start,Toast.LENGTH_SHORT).show();
+                            public void run() {
+                                batt[0] = getBatteryLevel();
+                                if (batt[0] < batt[1]) {
+                                    batt_used[0] = batt_used[0] + (batt[1] - batt[0]);
+                                }
+                                Toast.makeText(getApplicationContext(), "Battery Level: " + batt[0] + " %", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Battery Used: " + batt_used[0] + " %", Toast.LENGTH_SHORT).show();
+                                batt[1] = batt[0];
                             }
                         });
+                    } catch (InterruptedException e) {
                     }
-                    catch (InterruptedException e){
-                    }
+                }
             }
-        })).start();
-        
+        });
+        battery.start();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!battery.isInterrupted()) {
+            battery.interrupt();
+        }
+    }
+
 
     public void showEvents() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -182,6 +199,10 @@ public class ActivityMenu extends AppCompatActivity {
         } else {
             mOutputText.setText("Google Play Services required: " +
                     "after installing, close and relaunch this app.");
+        }
+
+        if (battery.isInterrupted()) {
+            battery.start();
         }
     }
 

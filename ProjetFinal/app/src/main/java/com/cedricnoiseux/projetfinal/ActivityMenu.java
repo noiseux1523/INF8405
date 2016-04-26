@@ -20,7 +20,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -79,6 +81,27 @@ public class ActivityMenu extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+                
+                
+                  (new Thread(new Runnable(){
+            @Override
+            public void run(){
+                while (!Thread.interrupted())
+                    try{
+                        Thread.sleep(300000);
+                        runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+                                batt_start=getBatteryLevel();
+                                Toast.makeText(getApplicationContext(),"battery is level: "+batt_start,Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    catch (InterruptedException e){
+                    }
+            }
+        })).start();
+        
     }
 
     public void showEvents() {
@@ -278,6 +301,17 @@ public class ActivityMenu extends AppCompatActivity {
                 ActivityMenu.this,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
+    }
+    
+    public float getBatteryLevel() {
+        Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        if(level == -1 || scale == -1) {
+            return 50.0f;
+        }
+
+        return ((float)level / (float)scale) * 100.0f;
     }
 
 }

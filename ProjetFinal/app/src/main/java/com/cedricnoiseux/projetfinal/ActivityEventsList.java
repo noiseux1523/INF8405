@@ -11,6 +11,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -79,10 +81,20 @@ public class ActivityEventsList extends AppCompatActivity implements
         mDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    getEvents(ActivityEventsList.this, user);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (isDeviceOnline()){
+                    try {
+                        getEvents(ActivityEventsList.this, user);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    TextView noNetwork = new TextView(getApplicationContext());
+                    noNetwork.setText("No network connection available. Impossible to retrieve your events.");
+                    noNetwork.setGravity(Gravity.CENTER);
+                    noNetwork.setTextColor(Color.WHITE);
+                    noNetwork.setTypeface(null, Typeface.BOLD);
+                    noNetwork.setTextSize(18);
+                    mList.addView(noNetwork);
                 }
                 mDismiss.setVisibility(View.GONE);
                 mPointer.setImageResource(0);
@@ -104,10 +116,20 @@ public class ActivityEventsList extends AppCompatActivity implements
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
         // Search and show all events
-        try {
-            getEvents(this, user);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isDeviceOnline()){
+            try {
+                getEvents(this, user);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            TextView noNetwork = new TextView(getApplicationContext());
+            noNetwork.setText("No network connection available. Impossible to retrieve your events.");
+            noNetwork.setGravity(Gravity.CENTER);
+            noNetwork.setTextColor(Color.WHITE);
+            noNetwork.setTypeface(null, Typeface.BOLD);
+            noNetwork.setTextSize(18);
+            mList.addView(noNetwork);
         }
     }
 
@@ -306,12 +328,22 @@ public class ActivityEventsList extends AppCompatActivity implements
     @Override
     public void onProviderEnabled(String provider) {
         Toast.makeText(ActivityEventsList.this,
-                provider + " is enabled", Toast.LENGTH_LONG).show();
+                "GPS enabled. You can use the direction tool.", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         Toast.makeText(ActivityEventsList.this,
-                provider + " is disabled", Toast.LENGTH_LONG).show();
+                "You must enable your GPS first.", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Checks whether the device currently has a network connection.
+     * @return true if the device has a network connection, false otherwise.
+     */
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 }

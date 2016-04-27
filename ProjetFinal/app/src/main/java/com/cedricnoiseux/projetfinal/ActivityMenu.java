@@ -28,6 +28,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 
 import java.util.Arrays;
+import java.util.Set;
 
 
 public class ActivityMenu extends AppCompatActivity {
@@ -80,44 +81,47 @@ public class ActivityMenu extends AppCompatActivity {
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
 
-        if (!shouldContinue && battery == null) {
-            shouldContinue = true;
-            startThread();
+        // Search if BatteryThread already running
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+        boolean startThread = true;
+        for (Thread thread : threadArray) {
+            if (thread.getName() == "BatteryThread")
+                startThread = false;
         }
-    }
 
-    /**
-     * Start the thread to monitor the battery
-     */
-    protected void startThread() {
-        battery = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final float[] batt_used = {0};
-                final float[] batt = {getBatteryLevel(), getBatteryLevel()};
-                while (shouldContinue && !battery.isInterrupted()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            batt[0] = getBatteryLevel();
-                            if (batt[0] < batt[1]) {
-                                batt_used[0] = batt_used[0] + (batt[1] - batt[0]);
-                            }
-                            Toast.makeText(getApplicationContext(), "Battery Level: " + batt[0] + " %", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(), "Battery Used: " + batt_used[0] + " %", Toast.LENGTH_SHORT).show();
-                            batt[1] = batt[0];
+        // Start BatteryThread if none running
+        if (startThread) {
+            shouldContinue = true;
+            battery = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final float[] batt_used = {0};
+                    final float[] batt = {getBatteryLevel(), getBatteryLevel()};
+                    while (shouldContinue && !Thread.interrupted()) {
+                        try {
+                            Thread.sleep(60 * 1000);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    batt[0] = getBatteryLevel();
+                                    if (batt[0] < batt[1]) {
+                                        batt_used[0] = batt_used[0] + (batt[1] - batt[0]);
+                                    }
+                                    Toast.makeText(getApplicationContext(), "Battery Level: " + batt[0] + " %", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Battery Used: " + batt_used[0] + " %", Toast.LENGTH_SHORT).show();
+                                    batt[1] = batt[0];
+                                }
+                            });
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            return;
                         }
-                    });
-                    try {
-                        battery.sleep(10 * 1000);
-                    } catch (InterruptedException e) {
-                        battery.interrupt();
-                        return;
                     }
                 }
-            }
-        }, "BatteryThread");
-        battery.start();
+            }, "BatteryThread");
+            battery.start();
+        }
     }
 
     public void showEvents() {
@@ -206,11 +210,19 @@ public class ActivityMenu extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+        for (Thread thread : threadArray) {
+            if (thread.getName() == "BatteryThread")
+                thread.interrupt();
+        }
+
         if (shouldContinue && battery != null) {
             shouldContinue = false;
             battery.interrupt();
             battery = null;
         }
+
         super.onDestroy();
     }
 

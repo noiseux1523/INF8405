@@ -4,10 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -247,7 +250,10 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
     public void onConnected(Bundle dataBundle) {
         // Display the connection status
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location != null) {
+        if (!isDeviceOnline()) {
+            Toast.makeText(getApplicationContext(), "You must connect to the internet first.", Toast.LENGTH_SHORT).show();
+        }
+        else if (location != null) {
             // Get user location
             Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -279,7 +285,7 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Current location was null, enable GPS on device!", Toast.LENGTH_SHORT).show();
         }
         // Start updates
         startLocationUpdates();
@@ -301,42 +307,45 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
      * @param location
      */
     public void onLocationChanged(Location location) {
-        // Report to the UI that the location was updated and clear map
-        String msg = "Updated Location: " +
-                Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
-        map.clear();
-
-        // Get user location
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        user.lastX = location.getLatitude();
-        user.lastY = location.getLongitude();
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title("You are here!");
-        map.addMarker(options);
-
-        // Get event locations
-        LinkedList<Event> events = null;
-        try {
-            events = SqlUtility.getAllEvents();
-            for (Event e : events){
-                LatLng latLngEvent = new LatLng(e.locX, e.locY);
-                SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
-                String date = format.format(e.date);
-                String info = " ON " + date + "\n" + " AT " + e.locationName;
-                MarkerOptions optionsEvent = new MarkerOptions()
-                        .position(latLngEvent)
-                        .title(e.name.toUpperCase())
-                        .snippet(info)
-                        .visible(true);
-                map.addMarker(optionsEvent);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!isDeviceOnline()) {
+            Toast.makeText(getApplicationContext(), "You must connect to the internet first.", Toast.LENGTH_SHORT).show();
         }
+        else {
+            // Report to the UI that the location was updated and clear map
+            String msg = "Updated Location: " +
+                    Double.toString(location.getLatitude()) + "," +
+                    Double.toString(location.getLongitude());
+            map.clear();
 
-        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            // Get user location
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            user.lastX = location.getLatitude();
+            user.lastY = location.getLongitude();
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng)
+                    .title("You are here!");
+            map.addMarker(options);
+
+            // Get event locations
+            LinkedList<Event> events = null;
+            try {
+                events = SqlUtility.getAllEvents();
+                for (Event e : events){
+                    LatLng latLngEvent = new LatLng(e.locX, e.locY);
+                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
+                    String date = format.format(e.date);
+                    String info = " ON " + date + "\n" + " AT " + e.locationName;
+                    MarkerOptions optionsEvent = new MarkerOptions()
+                            .position(latLngEvent)
+                            .title(e.name.toUpperCase())
+                            .snippet(info)
+                            .visible(true);
+                    map.addMarker(optionsEvent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /*
@@ -404,4 +413,13 @@ public class ActivityGoogleMaps extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Checks whether the device currently has a network connection.
+     * @return true if the device has a network connection, false otherwise.
+     */
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
 }

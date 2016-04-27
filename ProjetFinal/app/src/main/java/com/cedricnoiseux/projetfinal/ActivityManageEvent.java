@@ -76,7 +76,11 @@ public class ActivityManageEvent extends AppCompatActivity {
         mCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createEvent(user);
+                if (isDeviceOnline()){
+                    createEvent(user);
+                } else {
+                    Toast.makeText(getApplicationContext(), "You must connect to the internet first.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -89,11 +93,13 @@ public class ActivityManageEvent extends AppCompatActivity {
             }
         } else {
             TextView noNetwork = new TextView(getApplicationContext());
-            noNetwork.setText("No network connection available.");
+            noNetwork.setText("No network connection available. Impossible to retrieve your events.");
+            noNetwork.setGravity(Gravity.CENTER);
+            noNetwork.setTextColor(Color.WHITE);
+            noNetwork.setTypeface(null, Typeface.BOLD);
+            noNetwork.setTextSize(18);
             mList.addView(noNetwork);
         }
-
-
     }
 
     /**

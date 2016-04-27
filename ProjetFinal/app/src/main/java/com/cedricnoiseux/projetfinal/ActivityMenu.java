@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,7 +36,8 @@ public class ActivityMenu extends AppCompatActivity {
     private TextView mOutputText; // Montre l'account ou les erreurs
     private TextView mShow;
     private TextView mManage;
-    public Thread battery;
+    Thread battery;
+    boolean shouldContinue;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -51,8 +50,6 @@ public class ActivityMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
-        // SqlUtility.runTest();
 
         // Check permissions
         requestPermissions();
@@ -83,43 +80,45 @@ public class ActivityMenu extends AppCompatActivity {
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
 
+        if (!shouldContinue && battery == null) {
+            shouldContinue = true;
+            startThread();
+        }
+    }
 
+    /**
+     * Start the thread to monitor the battery
+     */
+    protected void startThread() {
         battery = new Thread(new Runnable() {
             @Override
             public void run() {
                 final float[] batt_used = {0};
                 final float[] batt = {getBatteryLevel(), getBatteryLevel()};
-                while (!battery.isInterrupted()) {
-                    try {
-                        battery.sleep(60 * 1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                batt[0] = getBatteryLevel();
-                                if (batt[0] < batt[1]) {
-                                    batt_used[0] = batt_used[0] + (batt[1] - batt[0]);
-                                }
-                                Toast.makeText(getApplicationContext(), "Battery Level: " + batt[0] + " %", Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getApplicationContext(), "Battery Used: " + batt_used[0] + " %", Toast.LENGTH_SHORT).show();
-                                batt[1] = batt[0];
+                while (shouldContinue && !battery.isInterrupted()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            batt[0] = getBatteryLevel();
+                            if (batt[0] < batt[1]) {
+                                batt_used[0] = batt_used[0] + (batt[1] - batt[0]);
                             }
-                        });
+                            Toast.makeText(getApplicationContext(), "Battery Level: " + batt[0] + " %", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Battery Used: " + batt_used[0] + " %", Toast.LENGTH_SHORT).show();
+                            batt[1] = batt[0];
+                        }
+                    });
+                    try {
+                        battery.sleep(10 * 1000);
                     } catch (InterruptedException e) {
+                        battery.interrupt();
+                        return;
                     }
                 }
             }
-        });
+        }, "BatteryThread");
         battery.start();
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (!battery.isInterrupted()) {
-            battery.interrupt();
-        }
-    }
-
 
     public void showEvents() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -189,7 +188,7 @@ public class ActivityMenu extends AppCompatActivity {
 
     /**
      * Called whenever this activity is pushed to the foreground, such as after
-     * a call to onCreate().
+     * a call to onStart().
      */
     @Override
     protected void onResume() {
@@ -200,10 +199,19 @@ public class ActivityMenu extends AppCompatActivity {
             mOutputText.setText("Google Play Services required: " +
                     "after installing, close and relaunch this app.");
         }
+    }
 
-        if (battery.isInterrupted()) {
-            battery.start();
+    /**
+     * Called when application is closed
+     */
+    @Override
+    protected void onDestroy() {
+        if (shouldContinue && battery != null) {
+            shouldContinue = false;
+            battery.interrupt();
+            battery = null;
         }
+        super.onDestroy();
     }
 
     /**
@@ -336,41 +344,3 @@ public class ActivityMenu extends AppCompatActivity {
     }
 
 }
-
-
-
-/*
-Menu
-Liste evenement -> google maps ou format liste
-Gerer mes evenments -> format liste evenement -> fenetre edit des evenements
-*/
-
-/*
-Menu -> deux textviews pour les deux options
-        Liste evenements ouvrent une 2e fenetre avec les deux options possibles (afficher evenement google maps ou en liste)
-        Gerer evenements ouvrent une liste des evenements crees par le user
-*/
-
-/*
-Liste Evenement Maps -> Google Maps affiche des markers avec les events (que tu participent ou non) et les infos + la position utilisateur
-                        Indicateur que tu participe ou non
-                        Indicateur different pour user
-                        Date, (x,y), titre, id, nb max participants
-*/
-
-/*
-Liste Evenement Liste -> Liste les differents events (que tu participes ou non) en format liste
-                         Indicateur que tu participes ou non
-                         Date, nom lieu, titre, id, nb max participants
-*/
-
-/*
-Gerer mes evenements -> Liste de mes evenements que jai cree
-                        Date, nom lieu, (x,y), titre, id, nb max participants
-                        Options pour edit ou delete un event existant ou cree un nouveau
- */
-
-/*
-Edit mes events -> Fenetre pour editer un evenement existant
-                   Field pour modifier Date, nom lieu, (x,y), titre, id(?) ou nb max participants
- */

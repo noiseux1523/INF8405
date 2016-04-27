@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
@@ -79,11 +81,18 @@ public class ActivityManageEvent extends AppCompatActivity {
         });
 
         // Search and show all events created by user
-        try {
-            getEvents(user);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isDeviceOnline()){
+            try {
+                getEvents(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            TextView noNetwork = new TextView(getApplicationContext());
+            noNetwork.setText("No network connection available.");
+            mList.addView(noNetwork);
         }
+
 
     }
 
@@ -441,43 +450,14 @@ public class ActivityManageEvent extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Checks whether the device currently has a network connection.
+     * @return true if the device has a network connection, false otherwise.
+     */
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
 }
-
-/*
-Menu
-Liste evenement -> google maps ou format liste
-Gerer mes evenments -> format liste evenement -> fenetre edit des evenements
-*/
-
-/*
-Menu -> deux textviews pour les deux options
-        Liste evenements ouvrent une 2e fenetre avec les deux options possibles (afficher evenement google maps ou en liste)
-        Gerer evenements ouvrent une liste des evenements crees par le user
-*/
-
-/*
-Liste Evenement Maps -> Google Maps affiche des markers avec les events (que tu participent ou non) et les infos + la position utilisateur
-                        Indicateur que tu participe ou non
-                        Indicateur different pour user
-                        Date, (x,y), titre, id, nb max participants
-*/
-
-/*
-Liste Evenement Liste -> Liste les differents events (que tu participes ou non) en format liste
-                         Indicateur que tu participes ou non
-                         Date, nom lieu, titre, id, nb max participants
-*/
-
-/*
-Gerer mes evenements -> Liste de mes evenements que jai cree
-                        Date, nom lieu, (x,y), titre, id, nb max participants
-                        Options pour edit ou delete un event existant ou cree un nouveau
-                        Afficher pop up window avec 3 options:
-                            Edit ou Delete ou Rien
-                        Bouton pour create
- */
-
-/*
-Edit mes events -> Fenetre pour editer un evenement existant
-                   Field pour modifier Date, nom lieu, (x,y), titre, id(?) ou nb max participants
- */
